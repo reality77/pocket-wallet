@@ -120,25 +120,6 @@ export default new Vuex.Store({
   
         return true;
       }
-    },
-    
-    async ADMIN_initializeProvider({ commit }) {
-
-      if (typeof window.ethereum === 'undefined') {
-        commit("setError", "Metamask is not installed !");
-        return null;
-      }
-
-      const { ethereum } = window;
-      return new ethers.providers.Web3Provider(ethereum);
-    },
-    
-    async ADMIN_createContract({ dispatch }, userAddress) {
-      var adminWallet = await dispatch("ADMIN_initializeProvider");
-      var factory = await dispatch("getFactory", adminWallet);
-      var contract = await factory.createPocketWallet(userAddress);
-
-      return contract;
-    },
+    }
   },
 });

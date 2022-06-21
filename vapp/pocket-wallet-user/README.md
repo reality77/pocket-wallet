@@ -1,4 +1,4 @@
-# vapp
+# pocket-wallet-user
 
 ## Links (ethers.js, web3)
 
