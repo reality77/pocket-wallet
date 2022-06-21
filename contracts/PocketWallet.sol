@@ -39,7 +39,7 @@ contract PocketWallet {
     function _addControllerInternal(address controller) private {
         _controllers.push(controller);
         _controllersMap[controller] = 1;
-        _factory.setController(this, controller);
+        _factory.setController(controller);
     }
 
     function register(address user) external onlyController {
@@ -54,7 +54,7 @@ contract PocketWallet {
 
     function _setUserInternal(address user) private {
         _user  = user;
-        _factory.setUser(this, user);
+        _factory.setUser(user);
     }
 
     function spend(address receipient, uint256 amount) external onlyUser {

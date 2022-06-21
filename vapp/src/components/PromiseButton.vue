@@ -45,10 +45,7 @@ export default {
     },
     async mounted() {
 
-        var bus = this
-        bus.$store.dispatch("initializeProvider");
-
-    },
+},
 }
 
 </script>

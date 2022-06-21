@@ -11,15 +11,18 @@ contract PocketWalletFactory {
     constructor() {
     }
 
-    function setController(PocketWallet wallet, address controller) external {
-        _controllersToContract[controller] = address(wallet);
+    function setController(address controller) external {
+        require(_contractsMap[msg.sender] > 0); // ensures the pocket wallet contract (= sender) has been created from this factory
+        _controllersToContract[controller] = msg.sender;
     }
 
-    function setUser(PocketWallet wallet, address user) external {
-        _usersToContract[user] = address(wallet);
+    function setUser(address user) external {
+        require(_contractsMap[msg.sender] > 0); // ensures the pocket wallet contract (= sender) has been created from this factory
+        _usersToContract[user] = msg.sender;
     }
 
     function removeUser(address user) external {
+        require(_contractsMap[msg.sender] > 0); // ensures the pocket wallet contract (= sender) has been created from this factory
         delete _usersToContract[user];
     }
 
@@ -28,4 +31,7 @@ contract PocketWalletFactory {
         _contractsMap[address(wallet)] = 1;
     }
 
+    function getUserContractAddress(address user) external view returns (address) {
+        return _usersToContract[user];
+    }
 }
