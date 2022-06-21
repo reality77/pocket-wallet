@@ -81,6 +81,7 @@ export default new Vuex.Store({
           maxPriorityFeePerGas: ethers.utils.parseUnits("50", "gwei"),
           maxFeePerGas: ethers.utils.parseUnits("50", "gwei"),
           gasLimit: 2000000,
+          value: ethers.utils.parseEther("10")
         });
   
         await trx.wait();

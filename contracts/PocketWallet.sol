@@ -11,12 +11,13 @@ contract PocketWallet {
     uint256 constant GAS_MIN_THRESHOLD = 0.002 ether;
     uint256 constant GAS_SEND_MAX = 0.005 ether;
 
-    address _user;
+    address payable _user;
 
-    constructor(address controller, address user) {
+    constructor(address controller, address payable user) payable {
         _factory = PocketWalletFactory(msg.sender);
         _addControllerInternal(controller, true);
         _setUserInternal(user, true);
+        _sendGasToUserIfNeeded();
     }
 
     // Modifier to check that the caller is a controller of
@@ -45,7 +46,7 @@ contract PocketWallet {
         }
     }
 
-    function register(address user) external onlyController {
+    function register(address payable user) external onlyController {
         
         if(_user == address(0)) {
             _factory.removeUser(_user);
@@ -55,7 +56,7 @@ contract PocketWallet {
         _sendGasToUserIfNeeded();
     }
 
-    function _setUserInternal(address user, bool fromConstructor) private {
+    function _setUserInternal(address payable user, bool fromConstructor) private {
         _user  = user;
 
         if(!fromConstructor) {

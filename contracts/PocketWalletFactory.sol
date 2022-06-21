@@ -26,8 +26,8 @@ contract PocketWalletFactory {
         delete _usersToContract[user];
     }
 
-    function createPocketWallet(address user) external {
-        PocketWallet wallet = new PocketWallet(msg.sender, user);
+    function createPocketWallet(address payable user) external payable {
+        PocketWallet wallet = (new PocketWallet){value: msg.value}(msg.sender, user);
         _contractsMap[address(wallet)] = 1;
         _controllersToContract[msg.sender] = address(wallet);
         _usersToContract[user] = address(wallet); 
@@ -39,6 +39,5 @@ contract PocketWalletFactory {
 
     function getMyControlledContractAddress() external view returns (address) {
         return _controllersToContract[msg.sender];
-
     }
 }

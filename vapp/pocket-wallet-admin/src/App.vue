@@ -75,6 +75,7 @@ export default {
         case "0x5": 
         case "0x2a": 
         case "0x539": 
+        case "0x53a": 
           return true;
         default: 
           return false;

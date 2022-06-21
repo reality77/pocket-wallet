@@ -22,6 +22,19 @@
           <main class="m-auto">
             <!-- Content -->
             <p>Contract <span>{{ contract_address }}</span></p>
+            <p>Balance (pocket wallet) : <span>{{ balance }}</span></p>
+            <p>Balance (working wallet) : <span>{{ wallet_balance }}</span></p>
+            <div class="m-auto">
+              <div>
+                <label>Receipient : </label>
+                <input v-model="send_receipient" />
+              </div>
+              <div>
+                <label>Amount : </label>
+                <input type="number" v-model="send_amount" />
+              </div>
+              <PromiseButton :promiseFunction="sendAmount" childClass="ml-2">Send</PromiseButton>            
+            </div>
           </main>
         </div>
       </div>
@@ -33,12 +46,16 @@
 </template>
 
 <script>
+import { ethers } from 'ethers';
 import FirstAccess from './FirstAccess.vue';
+import PromiseButton from './PromiseButton.vue';
 
 export default {
   name: 'AppUser',
   data: function () {
     return {
+      send_receipient: null,
+      send_amount: 0,
     }
   },
   props: {
@@ -50,11 +67,25 @@ export default {
     network() {
       return this.$store.getters.network;
     },
+    balance() {
+      if(this.$store.getters.balance) {
+        return ethers.utils.formatEther(this.$store.getters.balance);
+      } else {
+        return null;
+      }
+    },
     factory_address() {
       return this.$store.getters.factory_address;
     },
     wallet_address() {
       return this.$store.getters.wallet_address;
+    },
+    wallet_balance() {
+      if(this.$store.getters.wallet_balance) {
+        return ethers.utils.formatEther(this.$store.getters.wallet_balance);
+      } else {
+        return null;
+      }
     },
     contract_address() {
       return this.$store.getters.contract_address;
@@ -70,6 +101,7 @@ export default {
         case "0x5": 
         case "0x2a": 
         case "0x539": 
+        case "0x53a": 
           return true;
         default: 
           return false;
@@ -78,8 +110,14 @@ export default {
   },
   components: {
     FirstAccess,
+    PromiseButton
   },
   methods: {
+    async sendAmount() {
+      console.log(this.$data.send_amount.toString());
+      
+      await this.$store.dispatch("sendAmount", { receipient: this.$data.send_receipient, amount: ethers.utils.parseEther(this.$data.send_amount.toString()) });
+    }
   },
   emits: {
   },
