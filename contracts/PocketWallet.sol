@@ -15,8 +15,8 @@ contract PocketWallet {
 
     constructor(address controller, address user) {
         _factory = PocketWalletFactory(msg.sender);
-        _addControllerInternal(controller);
-        _setUserInternal(user);
+        _addControllerInternal(controller, true);
+        _setUserInternal(user, true);
     }
 
     // Modifier to check that the caller is a controller of
@@ -36,10 +36,13 @@ contract PocketWallet {
     // Function for Ether deposits
     receive() external payable {}
 
-    function _addControllerInternal(address controller) private {
+    function _addControllerInternal(address controller, bool fromConstructor) private {
         _controllers.push(controller);
         _controllersMap[controller] = 1;
-        _factory.setController(controller);
+
+        if(!fromConstructor) {
+            _factory.setController(controller);
+        }
     }
 
     function register(address user) external onlyController {
@@ -48,13 +51,16 @@ contract PocketWallet {
             _factory.removeUser(_user);
         }
 
-        _setUserInternal(user);
+        _setUserInternal(user, false);
         _sendGasToUserIfNeeded();
     }
 
-    function _setUserInternal(address user) private {
+    function _setUserInternal(address user, bool fromConstructor) private {
         _user  = user;
-        _factory.setUser(user);
+
+        if(!fromConstructor) {
+            _factory.setUser(user);
+        }
     }
 
     function spend(address receipient, uint256 amount) external onlyUser {

@@ -1,6 +1,6 @@
 import Vuex from "vuex";
 import { ethers } from "ethers";
-import PocketWalletFactory from "../contracts/PocketWalletFactory.json"
+import PocketWalletFactory from "../../../contracts/PocketWalletFactory.json"
 
 export default new Vuex.Store({
   state: {

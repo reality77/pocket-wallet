@@ -9,7 +9,7 @@
     </nav>
 
     <div class="h-full">
-      <div v-if="account && is_ready" class="flex flex-row h-full">
+      <div v-if="wallet_address" class="flex flex-row h-full">
         <div class="flex-initial p-2 dark:bg-slate-800">
           <aside>
             <!-- Aside -->
@@ -21,12 +21,13 @@
           </div>
           <main class="m-auto">
             <!-- Content -->
+            <p>Contract <span>{{ contract_address }}</span></p>
           </main>
         </div>
       </div>
     </div>
   </div>
-  <div class="modal" v-if="displayFirstAccess">
+  <div class="modal" v-if="!contract_address">
     <FirstAccess></FirstAccess>
   </div>
 </template>
@@ -38,7 +39,6 @@ export default {
   name: 'AppUser',
   data: function () {
     return {
-      displayFirstAccess: true,
     }
   },
   props: {
@@ -55,6 +55,9 @@ export default {
     },
     wallet_address() {
       return this.$store.getters.wallet_address;
+    },
+    contract_address() {
+      return this.$store.getters.contract_address;
     },
     error() {
       return this.$store.getters.error;
@@ -82,7 +85,6 @@ export default {
   },
   async mounted() {
     this.$store.dispatch("loadWallet");
-    this.displayFirstAccess = (this.$store.getters.contract_address == null);
   },
 }
 

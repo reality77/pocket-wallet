@@ -5,11 +5,12 @@
         <li class="flex-initial text-slate-300 ml-8 self-center"><h1>Pocket wallet - Admin</h1></li>
       </ul>
       <div class="flex-shrink overflow-visible p-2 z-30">
+        <MyAccount></MyAccount>
       </div>
     </nav>
 
     <div class="h-full">
-      <div v-if="account && is_ready" class="flex flex-row h-full">
+      <div v-if="account" class="flex flex-row h-full">
         <div class="flex-initial p-2 dark:bg-slate-800">
           <aside>
             <!-- Aside -->
@@ -21,21 +22,31 @@
           </div>
           <main class="m-auto">
             <!-- Content -->
+            <div v-if="contract_address">
+              <p>
+                <span>{{ contract_address }}</span>
+              </p>
+            </div>
+            <div v-else>
+              <input v-model="userAddress"/>
+              <PromiseButton :promiseFunction="createContractForUser" childClass="ml-2">Create a Pocket Wallet</PromiseButton>            
+            </div>
           </main>
         </div>
       </div>
     </div>
   </div>
-  <div class="modal" v-if="displayFirstAccess">
-  </div>
 </template>
 
 <script>
+import MyAccount from './components/MyAccount.vue';
+import PromiseButton from './components/PromiseButton.vue'
 
 export default {
-  name: 'AppUser',
+  name: 'App',
   data: function () {
     return {
+      userAddress: null,
     }
   },
   props: {
@@ -50,9 +61,9 @@ export default {
     factory_address() {
       return this.$store.getters.factory_address;
     },
-    wallet_address() {
-      return this.$store.getters.wallet_address;
-    },
+    contract_address() {
+      return this.$store.getters.contract_address;
+    },    
     error() {
       return this.$store.getters.error;
     },
@@ -71,8 +82,14 @@ export default {
     }
   },
   components: {
+    MyAccount,
+    PromiseButton
   },
   methods: {
+    async createContractForUser() {
+      await this.$store.dispatch("createContract", this.$data.userAddress);
+    },
+
   },
   emits: {
   },
