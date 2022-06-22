@@ -56,7 +56,7 @@ contract PocketWallet {
         _sendGasToUserIfNeeded();
     }
 
-    function getUser() external view onlyController returns(address) {
+    function getUser() external view returns(address) {
         return _user;
     }
 
