@@ -69,11 +69,13 @@ export default new Vuex.Store({
 
     async generateWallet({ commit }, /*pin*/ ) {
       console.log("Generating your wallet");
-      const wallet = ethers.Wallet.createRandom();
-      
+      var wallet = ethers.Wallet.createRandom();
+      const provider = ethers.getDefaultProvider("http://localhost:8545");
+      wallet = wallet.connect(provider);
+
       commit("setWalletAddress", wallet.address)
       commit("setWalletMnemonic", wallet.mnemonic.phrase);
-      commit("setBalance", await wallet.getBalance());
+      commit("setWalletBalance", await wallet.getBalance());
 
       localStorage.setItem('wallet_address', wallet.address);
       console.log(`Wallet address : ${wallet.address}`);
@@ -82,11 +84,11 @@ export default new Vuex.Store({
       localStorage.setItem('wallet_mnemonic', wallet.mnemonic.phrase);
     },
 
-    async restoreWallet({ commit }, mnemonic ) {
-      const wallet = ethers.Wallet.fromMnemonic(mnemonic);
+    async restoreWallet({ commit, dispatch }, mnemonic ) {
+      commit("setWalletMnemonic", mnemonic);
+      var wallet = dispatch("getWallet");
       
       commit("setWalletAddress", wallet.address)
-      commit("setWalletMnemonic", mnemonic);
       commit("setWalletPrivateKey", wallet.privateKey);
       commit("setWalletBalance", await wallet.getBalance());
 

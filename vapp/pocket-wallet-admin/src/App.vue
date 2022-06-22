@@ -24,10 +24,10 @@
             <!-- Content -->
             <div v-if="contract_address">
               <p>
-                <span>{{ contract_address }}</span>
+                <PocketWalletController></PocketWalletController>
               </p>
             </div>
-            <div v-else>
+            <div v-if="!is_controller">
               <input v-model="userAddress"/>
               <PromiseButton :promiseFunction="createContractForUser" childClass="ml-2">Create a Pocket Wallet</PromiseButton>            
             </div>
@@ -40,7 +40,8 @@
 
 <script>
 import MyAccount from './components/MyAccount.vue';
-import PromiseButton from './components/PromiseButton.vue'
+import PromiseButton from './components/PromiseButton.vue';
+import PocketWalletController from "./components/PocketWalletController.vue";
 
 export default {
   name: 'App',
@@ -80,11 +81,15 @@ export default {
         default: 
           return false;
       }
-    }
+    },
+    is_controller() {
+        return this.$store.getters.is_controller;
+    },    
   },
   components: {
     MyAccount,
-    PromiseButton
+    PromiseButton,
+    PocketWalletController,
   },
   methods: {
     async createContractForUser() {

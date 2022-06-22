@@ -36,24 +36,19 @@ The contract factory address must be stored in the DApp source code directly
 + Wait for parent (pocket wallet contract registration) - polls factory every 10 seconds
 + [After parent registration]
   - finds contract_address from child_account_address
-- store (local storage) :
-  * contract_address
 
 
 ### [PARENT UI] Parent : New pocket wallet contract
 
 + Open the app
 + Connect existing browser wallet
-+ [FACTORY] Create the pocket wallet contract ([optional] with salt)
++ [FACTORY] Create the pocket wallet contract ([optional] with salt) & Register child account
   - parent address is <controller>
   - <controllers> maps parent address to the new contract address
-+ [CONTRACT] Send ETH to contract
-+ [CONTRACT] Register child account
   - child_account_address (becomes <user>)
   - [FACTORY] <users> maps child address to this contract address 
   - contract sends small amount to child account address (for gas spending only)
-- store (local storage) :
-  * contract_address
++ [CONTRACT] Send ETH to contract
 
 ## CHILD UI
 

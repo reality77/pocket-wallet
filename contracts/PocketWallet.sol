@@ -56,6 +56,14 @@ contract PocketWallet {
         _sendGasToUserIfNeeded();
     }
 
+    function getUser() external view onlyController returns(address) {
+        return _user;
+    }
+
+    function getControllers() external view returns(address[] memory) {
+        return _controllers;
+    }
+
     function _setUserInternal(address payable user, bool fromConstructor) private {
         _user  = user;
 

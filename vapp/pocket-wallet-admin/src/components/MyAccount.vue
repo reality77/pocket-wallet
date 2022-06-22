@@ -94,21 +94,19 @@ export default {
 
     var bus = this
 
-    bus.$store.dispatch("initializeProvider");
+    var provider = await bus.$store.dispatch("initializeProvider");
 
-    const { ethereum } = window;
-
-    ethereum.on('connect', function (connectInfo) {
+    provider.on('connect', function (connectInfo) {
       console.log("Event connect" + connectInfo);
     });
 
-    ethereum.on('chainChanged', function (chainId) {
+    provider.on('chainChanged', function (chainId) {
       console.log("Chain changed : " + chainId);
       bus.$store.dispatch("changeNetwork");
       bus.$emit('chainChanged', chainId);
     });
 
-    ethereum.on('accountsChanged', function (accounts) {
+    provider.on('accountsChanged', function (accounts) {
       console.log("Account changed : " + accounts);
       bus.$store.dispatch("changeAccount", accounts[0]);
       bus.$emit('accountsChanged', accounts);

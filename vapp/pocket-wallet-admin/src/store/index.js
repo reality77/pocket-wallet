@@ -1,6 +1,7 @@
 import Vuex from "vuex";
 import { ethers } from "ethers";
 import PocketWalletFactory from "../../../contracts/PocketWalletFactory.json"
+import PocketWallet from "../../../contracts/PocketWallet.json"
 
 export default new Vuex.Store({
   state: {
@@ -11,6 +12,8 @@ export default new Vuex.Store({
     factory_address : "0xd1476bC527eEC759a03fd9cb5A0c227B700D49d3",
     user_address: null,
     contract_address: null,
+    contract_balance: null,
+    is_controller: false,
   },
   getters: {
     account: (state) => state.account,
@@ -20,6 +23,8 @@ export default new Vuex.Store({
     factory_address: (state) => state.factory_address,
     user_address: (state) => state.user_address,
     contract_address: (state) => state.contract_address,
+    contract_balance: (state) => state.contract_balance,
+    is_controller: (state) => state.is_controller,
   },
   mutations: {
     setAccount(state, account) {
@@ -37,6 +42,12 @@ export default new Vuex.Store({
     setContractAddress(state, address) {
       state.contract_address = address;
     },
+    setContractBalance(state, balance) {
+      state.contract_balance = balance;
+    },
+    setIsController(state, isController) {
+      state.is_controller = isController;
+    },        
     setError(state, error) {
       state.error = error;
     }
@@ -71,7 +82,7 @@ export default new Vuex.Store({
       return new ethers.Contract(this.getters.factory_address, PocketWalletFactory.abi, provider.getSigner());
     },
 
-    async createContract({ commit, dispatch }, userAddress) {
+    async createContract({ dispatch }, userAddress) {
       var factory = await dispatch("getFactory");
       
       try {
@@ -86,13 +97,11 @@ export default new Vuex.Store({
   
         await trx.wait();
 
-        commit("setUserAddress", userAddress);
-
       } catch(e) {
         console.error(e);
       }
 
-      dispatch("updateData");
+      await dispatch("updateContractData");
 
     },
 
@@ -117,7 +126,7 @@ export default new Vuex.Store({
         commit("setError", null);
 
         await dispatch("updateBalance");
-        await dispatch("updateData");
+        await dispatch("updateContractData");
 
       } catch (error) {
         console.log(error);
@@ -199,20 +208,64 @@ export default new Vuex.Store({
       }
     },
     
-    async updateData({ commit, dispatch }) {
+    async getContract({dispatch}) {
+      var provider = await dispatch("initializeProvider");
+      return new ethers.Contract(this.getters.contract_address, PocketWallet.abi, provider.getSigner());
+    },
+
+    async updateContractData({ commit, dispatch }) {
       console.log("Updating data");
       var factory = await dispatch("getFactory");
+      var provider = await dispatch("initializeProvider");
 
       let contractAddress = await factory.getMyControlledContractAddress();
 
       if(contractAddress && contractAddress !== "0x0000000000000000000000000000000000000000") {
         console.log(`Contract detected : ${contractAddress}`);
         commit("setContractAddress", contractAddress);
+
+        var contract = await dispatch("getContract");
+
+        //console.log(`Contract controllers : ${await contract.getControllers()}`);
+
+        commit("setContractBalance", await provider.getBalance(contractAddress));
+        commit("setIsController", true);
+        commit("setUserAddress", await contract.getUser());
+
       } else {
         console.log(`No contract detected`);
         commit("setContractAddress", null);
+        commit("setContractBalance", null);
+        commit("setIsController", false);
+        commit("setUserAddress", null);
       }
-  
-    },  
+    }, 
+    
+    async addFunds({dispatch}, amount) {
+      const provider = await dispatch("initializeProvider");
+
+      let tx = {
+        to: this.state.contract_address,
+        value: ethers.utils.parseEther(amount)
+      };
+
+      var response = await provider.getSigner().sendTransaction(tx);
+
+      await response.wait();
+
+      await dispatch("updateBalance");
+      await dispatch("updateContractData");
+
+    },
+
+    async registerUser({dispatch}, userAddress) {
+      var contract = await dispatch("getContract");
+
+      await contract.register(userAddress);
+
+      await dispatch("updateBalance");
+      await dispatch("updateContractData");
+
+    }    
   },
 });
