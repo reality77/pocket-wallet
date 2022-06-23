@@ -2,6 +2,11 @@
 pragma solidity >=0.4.22 <0.9.0;
 import "./PocketWalletFactory.sol";
 
+struct PocketWalletReceipient {
+    address receipient;
+    string label;
+}
+
 contract PocketWallet {
     
     PocketWalletFactory _factory;
@@ -13,11 +18,16 @@ contract PocketWallet {
 
     address payable _user;
 
+    PocketWalletReceipient[] _receipients;
+    mapping(address => uint32) private _receipientIndexes;  // indexes starts at 1 because 0 is the default value
+
     constructor(address controller, address payable user) payable {
         _factory = PocketWalletFactory(msg.sender);
         _addControllerInternal(controller, true);
         _setUserInternal(user, true);
         _sendGasToUserIfNeeded();
+
+        addReceipient(controller, "Daddy");
     }
 
     // Modifier to check that the caller is a controller of
@@ -31,6 +41,13 @@ contract PocketWallet {
     // the contract.
     modifier onlyUser() {
         require(msg.sender == _user, "Not user");
+        _;
+    }
+
+   // Modifier to check that the caller is a user or a controller of
+    // the contract.
+    modifier onlyUserOrController() {
+        require(msg.sender == _user || _controllersMap[msg.sender] == 1, "Not user neither controller");
         _;
     }
 
@@ -56,6 +73,32 @@ contract PocketWallet {
         _sendGasToUserIfNeeded();
     }
 
+    function addReceipient(address receipient, string memory label) public onlyUserOrController  {
+        require(_receipientIndexes[receipient] == 0, "Receipient already existing");
+        _receipients.push(PocketWalletReceipient(receipient, label));
+        _receipientIndexes[receipient] = uint32(_receipients.length);
+    }
+
+    function removeReceipient(address receipient) public onlyUserOrController  {
+        require(_receipientIndexes[receipient] > 0, "Receipient not found");
+
+        uint32 index = _receipientIndexes[receipient] - 1;
+        
+        if (index != _receipients.length - 1) {
+            PocketWalletReceipient memory swappedReceipient = _receipients[_receipients.length - 1];
+            _receipients[index] = swappedReceipient;
+            _receipientIndexes[swappedReceipient.receipient] = index;
+        }
+
+        _receipients.pop();
+
+        delete _receipientIndexes[receipient];
+    }
+
+    function listReceipients() public view onlyUserOrController returns (PocketWalletReceipient[] memory) {
+        return _receipients;
+    }
+    
     function getUser() external view returns(address) {
         return _user;
     }

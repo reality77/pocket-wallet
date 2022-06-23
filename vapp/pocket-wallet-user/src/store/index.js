@@ -13,6 +13,7 @@ export default new Vuex.Store({
     wallet_private_key: null,
     wallet_balance: null,
     contract_address: null,
+    list_receipients: null,
   },
   getters: {
     network: (state) => state.network,
@@ -22,6 +23,7 @@ export default new Vuex.Store({
     wallet_address: (state) => state.wallet_address,
     wallet_balance: (state) => state.wallet_balance,
     contract_address: (state) => state.contract_address,
+    list_receipients: (state) => state.list_receipients,
   },
   mutations: {
     setNetwork(state, network) {
@@ -48,6 +50,9 @@ export default new Vuex.Store({
     setContractAddress(state, address) {
       state.contract_address = address;
     },
+    setListReceipients(state, listReceipients) {
+      state.list_receipients = listReceipients;
+    }
   },
   actions: {
 
@@ -86,7 +91,7 @@ export default new Vuex.Store({
 
     async restoreWallet({ commit, dispatch }, mnemonic ) {
       commit("setWalletMnemonic", mnemonic);
-      var wallet = dispatch("getWallet");
+      var wallet = await dispatch("getWallet");
       
       commit("setWalletAddress", wallet.address)
       commit("setWalletPrivateKey", wallet.privateKey);
@@ -96,9 +101,11 @@ export default new Vuex.Store({
 
       // TODO : Encrypt with PIN + salt
       localStorage.setItem('wallet_mnemonic', wallet.mnemonic.phrase);
+
+      await dispatch("updateContract")
     },
 
-    async loadWallet({ commit }) {
+    async loadWallet({ commit, dispatch }) {
 
       const provider = ethers.getDefaultProvider("http://localhost:8545");
 
@@ -140,6 +147,7 @@ export default new Vuex.Store({
         }
 
         commit("setBalance", await provider.getBalance(contract));
+        await dispatch("updateContract")
 
         return true;
       }
@@ -154,6 +162,33 @@ export default new Vuex.Store({
       var trx = await contract.spend(receipientWithAmount.receipient, receipientWithAmount.amount);
 
       trx.wait();
+    },
+
+    async addReceipient({dispatch}, receipientWithLabel) {
+      var wallet = await dispatch("getWallet");
+      var contract = await dispatch("getContract", wallet);
+
+      console.log(receipientWithLabel.receipient);
+      console.log(receipientWithLabel.label);
+      await contract.addReceipient(receipientWithLabel.receipient, receipientWithLabel.label);
+
+      await dispatch("updateContract")
+    },
+
+    async removeReceipient({dispatch}, receipient) {
+      var wallet = await dispatch("getWallet");
+      var contract = await dispatch("getContract", wallet);
+
+      await contract.removeReceipient(receipient);
+
+      await dispatch("updateContract")
+    },
+    
+    async updateContract({dispatch, commit}) {
+      var wallet = await dispatch("getWallet");
+      var contract = await dispatch("getContract", wallet);
+
+      commit("setListReceipients", await contract.listReceipients());
     }
   },
 });

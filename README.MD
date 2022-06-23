@@ -75,6 +75,16 @@ Exports a file containing :
 - child account address
 - contract address
 
+### [CONTRACT] ENHANCEMENT : Spending limit per day 
+
+- A controller can optionally configure a daily spending limit.
+
+### [CONTRACT] ENHANCEMENT : Approved receipients
+
+- A controller can optionally configure a white list of receipients. The user cannot spend to other recipients.
+- The receipients can have labels
+- In this case, a user can request a new receipient address which can be approved or rejected by a controller.
+
 
 ### Recovery (child)
 

@@ -24,6 +24,7 @@
             <p>Contract <span>{{ contract_address }}</span></p>
             <p>Balance (pocket wallet) : <span>{{ balance }}</span></p>
             <p>Balance (working wallet) : <span>{{ wallet_balance }}</span></p>
+            <p>Receipients : {{ list_receipients }}</p>
             <div class="m-auto">
               <div>
                 <label>Receipient : </label>
@@ -89,6 +90,9 @@ export default {
     },
     contract_address() {
       return this.$store.getters.contract_address;
+    },
+    list_receipients() {
+      return this.$store.getters.list_receipients;
     },
     error() {
       return this.$store.getters.error;
