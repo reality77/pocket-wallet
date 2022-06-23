@@ -81,7 +81,7 @@ Exports a file containing :
 
 ### [CONTRACT] ENHANCEMENT : Approved receipients
 
-- A controller can optionally configure a white list of receipients. The user cannot spend to other recipients.
+- A controller can optionally configure a white list of receipients. If enabled, the user will not be able to spend to other recipients.
 - The receipients can have labels
 - In this case, a user can request a new receipient address which can be approved or rejected by a controller.
 
@@ -91,3 +91,10 @@ Exports a file containing :
 #### If mnemonic lost
 
 Generate new child account address & re-register <user> in contract address
+
+## TODO
+
+### Create a components library
+
+see https://itnext.io/create-a-vue-js-component-library-as-a-module-part-1-a1116e632751
+
