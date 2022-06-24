@@ -46,8 +46,8 @@ contract PocketWallet {
 
    // Modifier to check that the caller is a user or a controller of
     // the contract.
-    modifier onlyUserOrController() {
-        require(msg.sender == _user || _controllersMap[msg.sender] == 1, "Not user neither controller");
+    modifier onlyUserOrControllerOrFactory() {
+        require(msg.sender == _user || msg.sender == address(_factory) || _controllersMap[msg.sender] == 1, "Must be either user, controller or factory");
         _;
     }
 
@@ -73,13 +73,13 @@ contract PocketWallet {
         _sendGasToUserIfNeeded();
     }
 
-    function addReceipient(address receipient, string memory label) public onlyUserOrController  {
+    function addReceipient(address receipient, string memory label) public onlyUserOrControllerOrFactory  {
         require(_receipientIndexes[receipient] == 0, "Receipient already existing");
         _receipients.push(PocketWalletReceipient(receipient, label));
         _receipientIndexes[receipient] = uint32(_receipients.length);
     }
 
-    function removeReceipient(address receipient) public onlyUserOrController  {
+    function removeReceipient(address receipient) public onlyUserOrControllerOrFactory  {
         require(_receipientIndexes[receipient] > 0, "Receipient not found");
 
         uint32 index = _receipientIndexes[receipient] - 1;
@@ -95,7 +95,7 @@ contract PocketWallet {
         delete _receipientIndexes[receipient];
     }
 
-    function listReceipients() public view onlyUserOrController returns (PocketWalletReceipient[] memory) {
+    function listReceipients() public view onlyUserOrControllerOrFactory returns (PocketWalletReceipient[] memory) {
         return _receipients;
     }
     
