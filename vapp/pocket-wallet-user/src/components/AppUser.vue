@@ -21,9 +21,9 @@
           </div>
           <main class="m-auto">
             <!-- Content -->
-            <p>Contract <span>{{ contract_address }}</span></p>
-            <p>Balance (pocket wallet) : <span>{{ balance }}</span></p>
-            <p>Balance (working wallet) : <span>{{ wallet_balance }}</span></p>
+            <p>Contract <span class="data">{{ contract_address }}</span></p>
+            <p>Balance (pocket wallet) : <span class="data">{{ balance }} Ξ</span></p>
+            <p>Balance (working wallet) : <span class="data">{{ wallet_balance }} Ξ</span></p>
             <SendBlock></SendBlock>
           </main>
         </div>
