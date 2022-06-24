@@ -64,7 +64,10 @@ export default {
             this.$data.custom_receipient = false;
         },
         selectCustomReceipient() {
-            this.$data.send_receipient.label = "Other";
+            this.$data.send_receipient = {
+                receipient: null,
+                label: "Other"
+            };
             this.$data.custom_receipient = true;
         },
         async sendAmountToReceipient() {

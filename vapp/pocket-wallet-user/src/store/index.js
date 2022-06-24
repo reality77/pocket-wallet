@@ -56,6 +56,10 @@ export default new Vuex.Store({
   },
   actions: {
 
+    async getProvider() {
+      return ethers.getDefaultProvider("http://localhost:8545");
+    },
+
     async getFactory(_, walletOrProvider) {
       return new ethers.Contract(this.getters.factory_address, PocketWalletFactory.abi, walletOrProvider);
     },
@@ -64,18 +68,18 @@ export default new Vuex.Store({
       return new ethers.Contract(this.getters.contract_address, PocketWallet.abi, walletOrProvider);
     },
 
-    async getWallet() {
-      const provider = ethers.getDefaultProvider("http://localhost:8545");
+    async getWallet({ dispatch}) {
       
+      const provider = await dispatch("getProvider");
       let mnemonic = this.state.wallet_mnemonic;
       var wallet = ethers.Wallet.fromMnemonic(mnemonic);
       return wallet.connect(provider);
     },
 
-    async generateWallet({ commit }, /*pin*/ ) {
+    async generateWallet({ commit, dispatch }, /*pin*/ ) {
       console.log("Generating your wallet");
       var wallet = ethers.Wallet.createRandom();
-      const provider = ethers.getDefaultProvider("http://localhost:8545");
+      const provider = await dispatch("getProvider");
       wallet = wallet.connect(provider);
 
       commit("setWalletAddress", wallet.address)
@@ -146,7 +150,7 @@ export default new Vuex.Store({
           console.log(`No PocketWallet contract found for this user`)
         }
 
-        commit("setBalance", await provider.getBalance(contract));
+        await dispatch("updateBalance")
         await dispatch("updateContract")
 
         return true;
@@ -162,6 +166,10 @@ export default new Vuex.Store({
       var trx = await contract.spend(receipientWithAmount.receipient, receipientWithAmount.amount);
 
       trx.wait();
+
+      await dispatch("updateBalance")
+      await dispatch("updateContract")
+
       return trx;
     },
 
@@ -173,6 +181,7 @@ export default new Vuex.Store({
       console.log(receipientWithLabel.label);
       await contract.addReceipient(receipientWithLabel.receipient, receipientWithLabel.label);
 
+      await dispatch("updateBalance")
       await dispatch("updateContract")
     },
 
@@ -182,16 +191,23 @@ export default new Vuex.Store({
 
       await contract.removeReceipient(receipient);
 
+      await dispatch("updateBalance")
       await dispatch("updateContract")
     },
     
+    async updateBalance({dispatch, commit}) {
+      var wallet = await dispatch("getWallet");
+      commit("setWalletBalance", await wallet.getBalance());
+    },
+
     async updateContract({dispatch, commit}) {
       var wallet = await dispatch("getWallet");
       var contract = await dispatch("getContract", wallet);
       
-      console.log(await contract.listReceipients());
+      const provider = await dispatch("getProvider");
 
       commit("setListReceipients", await contract.listReceipients());
+      commit("setBalance", await provider.getBalance(contract.address));
     }
   },
 });
