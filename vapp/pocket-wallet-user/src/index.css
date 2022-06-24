@@ -58,6 +58,14 @@
     .lightbtn {
         @apply rounded-md
     }
+    .link {
+        @apply 
+        bg-transparent
+        text-purple-600 border-0 
+        hover:underline hover:bg-transparent 
+        focus:underline focus:bg-transparent focus:border-0 focus:ring-0
+        ;
+    }
     .rotating {
         display:inline-block;
         text-align:center;
