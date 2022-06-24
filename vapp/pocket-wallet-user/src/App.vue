@@ -1,10 +1,5 @@
 <template>
-  <div v-if="adminMode">
-coucou
-  </div>
-  <div v-else class="h-full">
-    <AppUser class="h-full"></AppUser>
-  </div>
+    <AppUser></AppUser>
 </template>
 
 <script>
@@ -14,7 +9,6 @@ export default {
   name: 'App',
   data: function () {
     return {
-      adminMode: false,
     }
   },
   props: {

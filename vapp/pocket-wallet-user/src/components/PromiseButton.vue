@@ -1,11 +1,13 @@
 <template>
-    <button :class="childClass" @click="onExecuteFunction" :disabled="loading">
+    <BasicButton @click="onExecuteFunction" :disabled="loading">
         <slot></slot>
         <i v-if="loading" class="las la-spinner ml-2 rotating"></i>
-    </button>
+    </BasicButton>
 </template>
 
 <script>
+import BasicButton from "./BasicButton.vue"
+
 export default {
     name: 'App',
     data : function() {
@@ -20,6 +22,7 @@ export default {
     computed: {
     },
     components: {
+        BasicButton,
     },
     emits: {
         promiseFinalized() { return true }
