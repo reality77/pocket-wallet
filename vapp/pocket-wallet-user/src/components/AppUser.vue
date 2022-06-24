@@ -19,17 +19,16 @@
           <div v-if="!is_test_network" class="flex-initial bg-red-500/25 text-red-100">
             <p>This demo project is not expected to be deployed in a mainnet</p>
           </div>
-          <main class="m-auto flex flex-col">
-            <!-- Content -->
-            <div v-if="showDetails">
-              <button @click="showDetails = false;" class="link">X</button>
-              <p>Contract <span class="data">{{ contract_address }}</span></p>
-              <p>Balance (working wallet) : <span class="data">{{ wallet_balance }} Ξ</span></p>
+          <main class="flex flex-col h-full">
+            <div class="flex-grow flex flex-col">
+              <div class="flex-shrink flex mt-8">
+                <SendBlock class="m-auto"></SendBlock>
+              </div>
             </div>
-            <div v-else>
-              <button @click="showDetails = true;" class="link">Show details</button>
+            <div class="flex-initial">
+              <p class="text-sm">Contract <span class="data">{{ contract_address }}</span></p>
+              <p class="text-sm">Balance (working wallet) : <span class="data">{{ wallet_balance }} Ξ</span></p>
             </div>
-            <SendBlock></SendBlock>
           </main>
         </div>
       </div>
@@ -49,7 +48,6 @@ export default {
   name: 'AppUser',
   data: function () {
     return {
-      showDetails: false,
     }
   },
   props: {

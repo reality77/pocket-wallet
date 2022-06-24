@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <BasicPanel>
         <div>
             <span class="data text-2xl">{{ balance }} Ξ</span>
         </div>
@@ -27,16 +27,17 @@
                 </div>
                 <PromiseButton :promiseFunction="sendAmountToReceipient" :disabled="!send_amount" childClass="ml-2">Send {{ send_amount }} Ξ to {{ send_receipient.label }}</PromiseButton>
                 <div v-if="success_message">
-                    <p class="text-green-800">{{ success_message }}</p>
+                    <p class="text-green-400">{{ success_message }}</p>
                 </div>
             </div>
         </div>
-    </div>
+    </BasicPanel>
 </template>
 
 <script>
 import { ethers } from 'ethers';
 import PromiseButton from './PromiseButton.vue';
+import BasicPanel from './BasicPanel.vue';
 
 export default {
     name: 'FirstAccess',
@@ -66,8 +67,9 @@ export default {
         },
     },
     components: {
-    PromiseButton
-    },
+    PromiseButton,
+    BasicPanel
+},
     emits: {
     },
     methods: {

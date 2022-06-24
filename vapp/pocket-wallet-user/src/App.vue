@@ -2,8 +2,8 @@
   <div v-if="adminMode">
 coucou
   </div>
-  <div v-else>
-    <AppUser></AppUser>
+  <div v-else class="h-full">
+    <AppUser class="h-full"></AppUser>
   </div>
 </template>
 
