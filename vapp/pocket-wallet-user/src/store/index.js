@@ -162,6 +162,7 @@ export default new Vuex.Store({
       var trx = await contract.spend(receipientWithAmount.receipient, receipientWithAmount.amount);
 
       trx.wait();
+      return trx;
     },
 
     async addReceipient({dispatch}, receipientWithLabel) {
@@ -187,6 +188,8 @@ export default new Vuex.Store({
     async updateContract({dispatch, commit}) {
       var wallet = await dispatch("getWallet");
       var contract = await dispatch("getContract", wallet);
+      
+      console.log(await contract.listReceipients());
 
       commit("setListReceipients", await contract.listReceipients());
     }

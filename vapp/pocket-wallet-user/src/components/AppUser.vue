@@ -24,18 +24,7 @@
             <p>Contract <span>{{ contract_address }}</span></p>
             <p>Balance (pocket wallet) : <span>{{ balance }}</span></p>
             <p>Balance (working wallet) : <span>{{ wallet_balance }}</span></p>
-            <p>Receipients : {{ list_receipients }}</p>
-            <div class="m-auto">
-              <div>
-                <label>Receipient : </label>
-                <input v-model="send_receipient" />
-              </div>
-              <div>
-                <label>Amount : </label>
-                <input type="number" v-model="send_amount" />
-              </div>
-              <PromiseButton :promiseFunction="sendAmount" childClass="ml-2">Send</PromiseButton>            
-            </div>
+            <SendBlock></SendBlock>
           </main>
         </div>
       </div>
@@ -49,14 +38,12 @@
 <script>
 import { ethers } from 'ethers';
 import FirstAccess from './FirstAccess.vue';
-import PromiseButton from './PromiseButton.vue';
+import SendBlock from './SendBlock.vue';
 
 export default {
   name: 'AppUser',
   data: function () {
     return {
-      send_receipient: null,
-      send_amount: 0,
     }
   },
   props: {
@@ -91,9 +78,6 @@ export default {
     contract_address() {
       return this.$store.getters.contract_address;
     },
-    list_receipients() {
-      return this.$store.getters.list_receipients;
-    },
     error() {
       return this.$store.getters.error;
     },
@@ -114,14 +98,9 @@ export default {
   },
   components: {
     FirstAccess,
-    PromiseButton
-  },
+    SendBlock
+},
   methods: {
-    async sendAmount() {
-      console.log(this.$data.send_amount.toString());
-      
-      await this.$store.dispatch("sendAmount", { receipient: this.$data.send_receipient, amount: ethers.utils.parseEther(this.$data.send_amount.toString()) });
-    }
   },
   emits: {
   },
