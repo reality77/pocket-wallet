@@ -15,16 +15,24 @@
                 <h3>Add funds</h3>
                 <div class="mt-2">
                     <label>Amount : </label><input type="number" v-model="amount" class="ml-2" />
+                    <PromiseButton :promiseFunction="addFunds" childClass="ml-2">Add funds</PromiseButton>            
                 </div>
-                <PromiseButton :promiseFunction="addFunds" childClass="ml-2">Add funds</PromiseButton>            
             </div>
             <div>
-                <h3>Replacer user</h3>
+                <h3>Replace user</h3>
                 <div class="mt-2">
                     <label>New user address : </label><input v-model="newUserAddress" class="ml-2" />
+                    <PromiseButton :promiseFunction="registerUser" childClass="ml-2">Replace user</PromiseButton>            
                 </div>
-                <PromiseButton :promiseFunction="registerUser" childClass="ml-2">Replace user</PromiseButton>            
             </div>
+            <div>
+                <h3>Add receipient</h3>
+                <div class="mt-2">
+                    <label>Label : </label><input v-model="newReceipientLabel" class="ml-2" />
+                    <label>Address : </label><input v-model="newReceipientAddress" class="ml-2" />
+                    <PromiseButton :promiseFunction="addReceipient" childClass="ml-2">Add receipient</PromiseButton>            
+                </div>
+            </div>            
         </div>
         <div v-else>
             <span class="text-red-500">You are not a controller of this contract</span>
@@ -42,6 +50,8 @@ export default {
         return {
             amount: 0,
             newUserAddress: null,
+            newReceipientLabel: null,
+            newReceipientAddress: null,
         }
     },
     props: {
@@ -73,7 +83,10 @@ export default {
         },
         async registerUser() {
             await this.$store.dispatch("registerUser", this.$data.newUserAddress);
-        }        
+        },
+        async addReceipient() {
+            await this.$store.dispatch("addReceipient", { label: this.$data.newReceipientLabel, receipient: this.$data.newReceipientAddress });
+        }   
     },
     emits: {
     },

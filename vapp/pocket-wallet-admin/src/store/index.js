@@ -266,6 +266,17 @@ export default new Vuex.Store({
       await dispatch("updateBalance");
       await dispatch("updateContractData");
 
-    }    
+    },
+
+    async addReceipient({dispatch}, receipient) {
+      var contract = await dispatch("getContract");
+
+      console.log(receipient);
+      await contract.addReceipient(receipient.receipient, receipient.label);
+
+      await dispatch("updateBalance");
+      await dispatch("updateContractData");
+
+    }
   },
 });
