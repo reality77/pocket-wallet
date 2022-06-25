@@ -26,8 +26,9 @@
               </div>
             </div>
             <div class="flex-initial">
-              <p class="text-sm">Contract <span class="data">{{ contract_address }}</span></p>
-              <p class="text-sm">Balance (working wallet) : <span class="data">{{ wallet_balance }} Ξ</span></p>
+              <p class="text-xs">Contract <span class="data">{{ contract_address }}</span></p>
+              <p class="text-xs">Wallet address : <span class="data">{{ wallet_address }}</span></p>
+              <p class="text-xs">Wallet balance : <span class="data">{{ wallet_balance }} Ξ</span></p>
             </div>
           </main>
         </div>

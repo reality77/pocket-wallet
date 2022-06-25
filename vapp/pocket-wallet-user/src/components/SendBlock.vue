@@ -1,6 +1,6 @@
 <template>
     <BasicPanel class="flex flex-col">
-        <div class="flex-initial">
+        <div class="flex-initial mb-4">
             <span class="data text-2xl">{{ balance }} Ξ</span>
         </div>
         <div class="flex-grow flex flex-row">
