@@ -1,9 +1,9 @@
 <template>
     <BasicPanel class="flex flex-col">
-        <div>
+        <div class="flex-initial">
             <span class="data text-2xl">{{ balance }} Ξ</span>
         </div>
-        <div class="flex flex-row">
+        <div class="flex-grow flex flex-row">
             <BasicPanel class="flex-initial">
                 <ul class="grid grid-rows-1 divide-y divide-slate-700">
                     <li v-for="receipient in list_receipients" :key="receipient.receipient" class="p-2">
@@ -18,24 +18,28 @@
                     </li>
                 </ul>
             </BasicPanel>
-            <div class="flex-grow m-auto">
+            <div class="flex-grow m-8">
                 <div v-if="custom_receipient">
                     <label>Receipient address : </label>
                     <input v-model="send_receipient.receipient" />
                 </div>
                 <div v-if="send_receipient.receipient">
                     <div>
-                        <label>Amount : </label>
-                        <input type="number" v-model="send_amount" />
+                        <span>
+                            <label>Amount : </label>
+                            <input type="number" v-model="send_amount" />
+                        </span>
                     </div>
-                    <PromiseButton :promiseFunction="sendAmountToReceipient" :disabled="!send_amount" childClass="ml-2">
-                        Send {{ send_amount }} Ξ to {{ send_receipient.label }}</PromiseButton>
-                    <div v-if="success_message">
-                        <p class="text-green-400">{{ success_message }}</p>
+                    <div>
+                        <PromiseButton :promiseFunction="sendAmountToReceipient" :disabled="!send_amount" class="mt-8 text-xl">
+                            Send {{ send_amount }} Ξ to {{ send_receipient.label }}</PromiseButton>
                     </div>
                 </div>
-            </div>
+            </div>         
         </div>
+        <div class="flex-initial mt-4" v-if="success_message">
+            <p class="text-green-400">{{ success_message }}</p>
+        </div>           
     </BasicPanel>
 </template>
 

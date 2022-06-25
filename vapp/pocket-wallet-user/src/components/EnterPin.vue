@@ -1,12 +1,14 @@
 <template>
     <div>
         <input type="password" v-model="pin" />
-        <button @click="onOk">OK</button>
-        <button @click="onCancel" v-show="canCancel">Cancel</button>
+        <BasicButton @click="onOk">OK</BasicButton>
+        <BasicButton @click="onCancel" v-if="canCancel">Cancel</BasicButton>
     </div>
 </template>
 
 <script>
+import BasicButton from './BasicButton.vue';
+
 export default {
     name: 'FirstAccess',
     data : function() {
@@ -20,7 +22,8 @@ export default {
     computed: {
     },
     components: {
-    },
+    BasicButton
+},
     emits: {
         ok() { return true},
         cancel: () => true,

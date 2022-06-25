@@ -4,18 +4,19 @@
             <EnterPin @canCancel="false" @ok="onNewAccountPinEntered" @cancel="onNewAccountCancel"></EnterPin>
         </div>
         <div v-else-if="newAccount === false">
-            TODO : restore account from mnemonic or encrypted file ?
+            <input v-model="mnemonic"/>
+            <BasicButton @click="onRestoreFromMnemonic">Restore</BasicButton>
         </div>
         <div v-else>
             <h2>Bonjour !</h2>
             <p>
                 Don't have a Pocket Wallet yet ? 
-                <button @click="onNewAccount">Create my pocket</button>
+                <BasicButton @click="onNewAccount">Create my pocket</BasicButton>
             </p>
             <p>
                 Already have one ?  
             </p>
-            <button @click="onRestoreAccount">Restore my pocket</button>
+            <BasicButton @click="onRestoreAccount">Restore my pocket</BasicButton>
         </div>
     </div>
     <div v-else>
@@ -27,19 +28,20 @@
             </p>
             <span>{{ wallet_address }}</span>
         </div>
-
     </div>
 </template>
 
 <script>
 import EnterPin from './EnterPin.vue';
+import BasicButton from './BasicButton.vue';
 
 export default {
     name: 'FirstAccess',
     data : function() {
         return {
             newAccount: null,
-            walletAddress: ""
+            walletAddress: "",
+            mnemonic: "",
         };
     },
     props: {
@@ -54,8 +56,9 @@ export default {
 
     },
     components: {
-        EnterPin,
-    },
+    EnterPin,
+    BasicButton
+},
     emits: {
     },
     methods: {
@@ -72,6 +75,9 @@ export default {
         async onNewAccountPinEntered(pin) {
             await this.$store.dispatch("generateWallet", pin);
         },
+        async onRestoreFromMnemonic() {
+            await this.$store.dispatch("restoreWallet", this.$data.mnemonic);
+        },        
         onNewAccountCancel() {
             return false;
         }

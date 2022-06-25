@@ -7,7 +7,7 @@ export default new Vuex.Store({
   state: {
     network: null,
     balance: null,
-    factory_address : "0xd1476bC527eEC759a03fd9cb5A0c227B700D49d3",
+    factory_address : "0xE588643b4e3480B22B48698A3deC6d861A59F0bb",
     wallet_address: null,
     wallet_mnemonic: null,
     wallet_private_key: null,
@@ -56,8 +56,22 @@ export default new Vuex.Store({
   },
   actions: {
 
-    async getProvider() {
-      return ethers.getDefaultProvider("http://localhost:8545");
+    async getProvider({ commit }) {
+
+      const DEBUG_MODE = false;
+
+      if(DEBUG_MODE) {
+        var provider = ethers.getDefaultProvider("http://localhost:8545");
+        return provider;  
+      } else {
+        if (typeof window.ethereum === 'undefined') {
+          commit("setError", "Metamask is not installed !");
+          return null;
+        }
+
+        const { ethereum } = window;
+        return new ethers.providers.Web3Provider(ethereum);
+      }
     },
 
     async getFactory(_, walletOrProvider) {
@@ -106,6 +120,7 @@ export default new Vuex.Store({
       // TODO : Encrypt with PIN + salt
       localStorage.setItem('wallet_mnemonic', wallet.mnemonic.phrase);
 
+      await dispatch("updateBalance")
       await dispatch("updateContract")
     },
 

@@ -9,7 +9,7 @@ export default new Vuex.Store({
     network: null,
     balance: null,
     error: null,
-    factory_address : "0xd1476bC527eEC759a03fd9cb5A0c227B700D49d3",
+    factory_address : "0xE588643b4e3480B22B48698A3deC6d861A59F0bb",
     user_address: null,
     contract_address: null,
     contract_balance: null,
@@ -56,7 +56,7 @@ export default new Vuex.Store({
 
     async initializeProvider({ commit }) {
 
-      const DEBUG_MODE = true;
+      const DEBUG_MODE = false;
 
       if(DEBUG_MODE) {
         // Test wallet
