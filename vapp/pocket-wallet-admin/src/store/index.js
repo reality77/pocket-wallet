@@ -14,6 +14,7 @@ export default new Vuex.Store({
     contract_address: null,
     contract_balance: null,
     is_controller: false,
+    list_receipients: null,
   },
   getters: {
     account: (state) => state.account,
@@ -25,6 +26,7 @@ export default new Vuex.Store({
     contract_address: (state) => state.contract_address,
     contract_balance: (state) => state.contract_balance,
     is_controller: (state) => state.is_controller,
+    list_receipients: (state) => state.list_receipients,
   },
   mutations: {
     setAccount(state, account) {
@@ -50,7 +52,10 @@ export default new Vuex.Store({
     },        
     setError(state, error) {
       state.error = error;
-    }
+    },
+    setListReceipients(state, listReceipients) {
+      state.list_receipients = listReceipients;
+    }    
   },
   actions: {
 
@@ -231,6 +236,7 @@ export default new Vuex.Store({
         commit("setContractBalance", await provider.getBalance(contractAddress));
         commit("setIsController", true);
         commit("setUserAddress", await contract.getUser());
+        commit("setListReceipients", await contract.listReceipients());
 
       } else {
         console.log(`No contract detected`);
@@ -238,6 +244,7 @@ export default new Vuex.Store({
         commit("setContractBalance", null);
         commit("setIsController", false);
         commit("setUserAddress", null);
+        commit("setListReceipients", null);
       }
     }, 
     
@@ -250,7 +257,6 @@ export default new Vuex.Store({
       };
 
       var response = await provider.getSigner().sendTransaction(tx);
-
       await response.wait();
 
       await dispatch("updateBalance");
@@ -261,7 +267,8 @@ export default new Vuex.Store({
     async registerUser({dispatch}, userAddress) {
       var contract = await dispatch("getContract");
 
-      await contract.register(userAddress);
+      var response = await contract.register(userAddress);
+      await response.wait();
 
       await dispatch("updateBalance");
       await dispatch("updateContractData");
@@ -271,8 +278,8 @@ export default new Vuex.Store({
     async addReceipient({dispatch}, receipient) {
       var contract = await dispatch("getContract");
 
-      console.log(receipient);
-      await contract.addReceipient(receipient.receipient, receipient.label);
+      var response = await contract.addReceipient(receipient.receipient, receipient.label);
+      await response.wait();
 
       await dispatch("updateBalance");
       await dispatch("updateContractData");

@@ -26,7 +26,17 @@
                 </div>
             </div>
             <div>
-                <h3>Add receipient</h3>
+                <h3>Receipients</h3>
+                <div class="mt-2">
+                    <ul class="grid grid-rows-1 divide-y divide-slate-700">
+                        <li v-for="receipient in list_receipients" :key="receipient.receipient" class="p-2">
+                            <p>
+                                <span class="">{{ receipient.label }}</span>&nbsp;
+                                <span class="">{{ receipient.receipient }}</span>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
                 <div class="mt-2">
                     <label>Label : </label><input v-model="newReceipientLabel" class="ml-2" />
                     <label>Address : </label><input v-model="newReceipientAddress" class="ml-2" />
@@ -73,6 +83,9 @@ export default {
         is_controller() {
             return this.$store.getters.is_controller;
         },
+        list_receipients() {
+            return this.$store.getters.list_receipients;
+        },        
     },
     components: {
         PromiseButton
