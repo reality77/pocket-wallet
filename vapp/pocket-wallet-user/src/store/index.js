@@ -8,6 +8,7 @@ export default new Vuex.Store({
     network: null,
     balance: null,
     factory_address : "0xE588643b4e3480B22B48698A3deC6d861A59F0bb",
+    factory_found: false,
     wallet_address: null,
     wallet_mnemonic: null,
     wallet_private_key: null,
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     wallet_balance: (state) => state.wallet_balance,
     contract_address: (state) => state.contract_address,
     list_receipients: (state) => state.list_receipients,
+    factory_found: (state) => state.factory_found,
   },
   mutations: {
     setNetwork(state, network) {
@@ -52,7 +54,10 @@ export default new Vuex.Store({
     },
     setListReceipients(state, listReceipients) {
       state.list_receipients = listReceipients;
-    }
+    },
+    setFactoryFound(state, factoryFound) {
+      state.factory_found = factoryFound;
+    }    
   },
   actions: {
 
@@ -74,8 +79,19 @@ export default new Vuex.Store({
       }
     },
 
-    async getFactory(_, walletOrProvider) {
-      return new ethers.Contract(this.getters.factory_address, PocketWalletFactory.abi, walletOrProvider);
+    async getFactory({ commit }, walletOrProvider) {
+      const factory = new ethers.Contract(this.getters.factory_address, PocketWalletFactory.abi, walletOrProvider);
+
+      try {
+        commit("setFactoryFound", await factory.isInitialized());
+        console.log("Factory found")
+      } catch(e) {
+        console.log("Factory not found")
+        commit("setFactoryFound", false);
+        return null;
+      }
+
+      return factory;
     },
 
     async getContract(_, walletOrProvider) {
@@ -155,18 +171,22 @@ export default new Vuex.Store({
       if(!contract) {
         console.log(`Searching for PocketWallet contract for the user ...`);
 
-        var factory = await this.dispatch("getFactory", provider);
-        contract = await factory.getUserContractAddress(address);
-        
-        if(contract != "0x0000000000000000000000000000000000000000") {
-          console.log(`PocketWallet contract found : ${contract}`)
-          commit("setContractAddress", contract);
-        } else {
-          console.log(`No PocketWallet contract found for this user`)
-        }
-
         await dispatch("updateBalance")
-        await dispatch("updateContract")
+
+        var factory = await this.dispatch("getFactory", provider);
+
+        if(factory) {
+          contract = await factory.getUserContractAddress(address);
+          
+          if(contract != "0x0000000000000000000000000000000000000000") {
+            console.log(`PocketWallet contract found : ${contract}`)
+            commit("setContractAddress", contract);
+          } else {
+            console.log(`No PocketWallet contract found for this user`)
+          }
+
+          await dispatch("updateContract")
+        }
 
         return true;
       }

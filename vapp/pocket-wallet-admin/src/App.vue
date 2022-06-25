@@ -9,7 +9,7 @@
       </div>
     </nav>
 
-    <div class="h-full">
+    <div class="h-full" v-if="factory_found">
       <div v-if="account" class="flex flex-row h-full">
         <div class="flex-initial p-2 dark:bg-slate-800">
           <aside>
@@ -34,6 +34,9 @@
           </main>
         </div>
       </div>
+    </div>
+    <div v-else>
+      <span>Pocket wallet is not deployed on this network yet !</span>
     </div>
   </div>
 </template>
@@ -85,6 +88,9 @@ export default {
     is_controller() {
         return this.$store.getters.is_controller;
     },    
+    factory_found() {
+      return this.$store.getters.factory_found;
+    },    
   },
   components: {
     MyAccount,
@@ -100,6 +106,8 @@ export default {
   emits: {
   },
   async mounted() {
+    var provider = await this.$store.dispatch("initializeProvider");
+    await this.$store.dispatch("getFactory", provider);
   },
 }
 

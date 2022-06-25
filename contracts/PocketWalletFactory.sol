@@ -11,6 +11,10 @@ contract PocketWalletFactory {
     constructor() {
     }
 
+    function isInitialized() external pure returns (bool) {
+        return true;
+    }
+
     function setController(address controller) external {
         require(_contractsMap[msg.sender] > 0, "Pocket wallet is not registered in factory"); // ensures the pocket wallet contract (= sender) has been created from this factory
         _controllersToContract[controller] = msg.sender;

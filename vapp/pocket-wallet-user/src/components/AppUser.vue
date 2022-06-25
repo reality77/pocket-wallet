@@ -9,7 +9,7 @@
     </nav>
 
     <div class="h-full">
-      <div v-if="wallet_address" class="flex flex-row h-full">
+      <div v-if="factory_found && wallet_address" class="flex flex-row h-full">
         <div class="flex-initial p-2 dark:bg-slate-800">
           <aside>
             <!-- Aside -->
@@ -35,7 +35,10 @@
       </div>
     </div>
   </div>
-  <div class="modal" v-if="!contract_address">
+  <div class="modal" v-if="!factory_found">
+    <span>Pocket wallet is not deployed on this network yet !</span>
+  </div>
+  <div class="modal" v-else-if="!contract_address">
     <FirstAccess></FirstAccess>
   </div>
 </template>
@@ -86,6 +89,9 @@ export default {
     error() {
       return this.$store.getters.error;
     },
+    factory_found() {
+      return this.$store.getters.factory_found;
+    },
     is_test_network() {
       switch(this.$store.getters.network) {
         case "0x2": 
@@ -110,7 +116,10 @@ export default {
   emits: {
   },
   async mounted() {
-    this.$store.dispatch("loadWallet");
+    var provider = await this.$store.dispatch("initializeProvider");
+    await this.$store.dispatch("getFactory", provider);
+
+    await this.$store.dispatch("loadWallet");
   },
 }
 

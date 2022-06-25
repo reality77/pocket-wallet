@@ -10,6 +10,7 @@ export default new Vuex.Store({
     balance: null,
     error: null,
     factory_address : "0xE588643b4e3480B22B48698A3deC6d861A59F0bb",
+    factory_found: false,
     user_address: null,
     contract_address: null,
     contract_balance: null,
@@ -27,6 +28,7 @@ export default new Vuex.Store({
     contract_balance: (state) => state.contract_balance,
     is_controller: (state) => state.is_controller,
     list_receipients: (state) => state.list_receipients,
+    factory_found: (state) => state.factory_found,
   },
   mutations: {
     setAccount(state, account) {
@@ -55,7 +57,10 @@ export default new Vuex.Store({
     },
     setListReceipients(state, listReceipients) {
       state.list_receipients = listReceipients;
-    }    
+    },
+    setFactoryFound(state, factoryFound) {
+      state.factory_found = factoryFound;
+    }
   },
   actions: {
 
@@ -82,13 +87,29 @@ export default new Vuex.Store({
       }
     },
 
-    async getFactory({ dispatch }) {
-      var provider = await dispatch("initializeProvider");
-      return new ethers.Contract(this.getters.factory_address, PocketWalletFactory.abi, provider.getSigner());
+    async getFactory({ commit }, walletOrProvider) {
+
+      console.log("Initializing factory");
+      try {
+        const factory = new ethers.Contract(this.getters.factory_address, PocketWalletFactory.abi, walletOrProvider);
+        let ok = await factory.isInitialized();
+        commit("setFactoryFound", ok);
+        return factory;
+      } catch(e) {
+        console.log("Factory not found");
+        commit("setFactoryFound", false);
+        return null;
+      }
+
     },
 
     async createContract({ dispatch }, userAddress) {
-      var factory = await dispatch("getFactory");
+        const provider = await dispatch("initializeProvider");
+        var factory = await dispatch("getFactory", provider.getSigner());
+
+      if(!factory) {
+        return;
+      }
       
       try {
 
@@ -220,8 +241,13 @@ export default new Vuex.Store({
 
     async updateContractData({ commit, dispatch }) {
       console.log("Updating data");
-      var factory = await dispatch("getFactory");
       var provider = await dispatch("initializeProvider");
+      var factory = await dispatch("getFactory", provider.getSigner());
+
+      if(!factory) {
+        return;
+      }
+
 
       let contractAddress = await factory.getMyControlledContractAddress();
 
