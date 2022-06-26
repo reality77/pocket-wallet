@@ -7,7 +7,7 @@
     body {
         @apply bg-white text-slate-100 
         h-screen w-screen overflow-hidden
-        dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800 dark:text-slate-400
+        dark:bg-gradient-to-br dark:from-[#141E30] dark:to-[#243B55] dark:text-slate-400
         ; 
     }
     h1 {
