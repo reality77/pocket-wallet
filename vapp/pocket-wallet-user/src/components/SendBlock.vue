@@ -8,15 +8,15 @@
         </div>
         <div class="flex-grow flex flex-row">
             <BasicPanel class="flex-initial">
-                <ul class="grid grid-rows-1 divide-y divide-slate-700">
-                    <li v-for="receipient in list_receipients" :key="receipient.receipient" class="p-2">
+                <ul class="divide-y divide-slate-700 overflow-y-auto snap-mandatory snap-y">
+                    <li v-for="receipient in list_receipients" :key="receipient.receipient" class="p-2 snap-start">
                         <SelectionButton @click="selectReceipient(receipient)" :selected="(receipient == send_receipient)">
-                            <span class="text-left text-xl">{{ receipient.label }}</span>
+                            <span class="text-left text-sm sm:text-lg md:text-xl">{{ receipient.label }}</span>
                         </SelectionButton>
                     </li>
-                    <li class="p-2">
+                    <li class="p-2 snap-start">
                         <SelectionButton @click="selectCustomReceipient()" :selected="custom_receipient">
-                            <span class="text-left text-xl">Other ...</span>
+                            <span class="text-left text-sm sm:text-lg md:text-xl">Other ...</span>
                         </SelectionButton>
                     </li>
                 </ul>
@@ -32,7 +32,7 @@
                             <label>Amount : </label>
                         </div>
                         <div class="flex-auto">
-                            <input v-model="send_amount" class="bg-transparent text-white border-transparent text-center text-3xl w-48" />
+                            <input v-model="send_amount" class="bg-transparent text-white border-slate-700 text-center text-3xl w-48" />
                             <span class="text-white text-3xl">Ξ</span>
                         </div>
                     </div>

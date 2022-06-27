@@ -8,7 +8,7 @@
       </div>
     </nav>
 
-    <div class="h-full">
+    <div class="h-full overflow-y-auto">
       <div v-if="factory_found && wallet_address" class="flex flex-row h-full">
         <div class="flex-initial p-2 dark:bg-slate-800">
           <aside>
