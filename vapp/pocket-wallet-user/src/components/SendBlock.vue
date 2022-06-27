@@ -1,39 +1,53 @@
 <template>
     <BasicPanel class="flex flex-col">
-        <div class="flex-initial mb-4">
-            <span class="data text-2xl">{{ balance }} Ξ</span>
+        <div class="flex-initial pb-4 border-slate-600 border-b">
+            <span class="data text-3xl">{{ balance }} Ξ</span>
+        </div>
+        <div class="flex-initial my-4">
+            <h2>Send money</h2>
         </div>
         <div class="flex-grow flex flex-row">
             <BasicPanel class="flex-initial">
                 <ul class="grid grid-rows-1 divide-y divide-slate-700">
                     <li v-for="receipient in list_receipients" :key="receipient.receipient" class="p-2">
                         <SelectionButton @click="selectReceipient(receipient)" :selected="(receipient == send_receipient)">
-                            <span class="text-left">{{ receipient.label }}</span>
+                            <span class="text-left text-xl">{{ receipient.label }}</span>
                         </SelectionButton>
                     </li>
                     <li class="p-2">
                         <SelectionButton @click="selectCustomReceipient()" :selected="custom_receipient">
-                            <span class="text-left">Other ...</span>
+                            <span class="text-left text-xl">Other ...</span>
                         </SelectionButton>
                     </li>
                 </ul>
             </BasicPanel>
-            <div class="flex-grow m-8">
-                <div v-if="custom_receipient">
+            <div class="flex-grow mx-8 flex flex-col">
+                <div v-if="custom_receipient" class="flex-initial mb-4">
                     <label>Receipient address : </label>
                     <input v-model="send_receipient.receipient" />
                 </div>
-                <div v-if="send_receipient.receipient">
-                    <div>
-                        <span>
+                <div v-if="send_receipient.receipient" class="flex-initial flex flex-col">
+                    <div class="flex-auto flex flex-col">
+                        <div class="flex-initial mb-4">
                             <label>Amount : </label>
-                            <input type="number" v-model="send_amount" />
-                        </span>
+                        </div>
+                        <div class="flex-auto">
+                            <input v-model="send_amount" class="bg-transparent text-white border-transparent text-center text-3xl w-48" />
+                            <span class="text-white text-3xl">Ξ</span>
+                        </div>
                     </div>
-                    <div>
+                    <div class="flex-initial">
                         <PromiseButton :promiseFunction="sendAmountToReceipient" :disabled="!send_amount" class="mt-8 text-xl">
                             Send {{ send_amount }} Ξ to {{ send_receipient.label }}</PromiseButton>
                     </div>
+                    <div v-if="custom_receipient" class="flex-initial flex flex-col">
+                        <div class="flex-auto">
+                            <span>Please check the receipient address is correct before sending money</span>
+                        </div>
+                        <div class="flex-auto">
+                            <span v-for="chunk, index in split_receipient_address" :key="chunk" class="text-white text-lg" :class="[ { 'text-green-400':  (index % 2 == 1) } ]">{{ chunk }}&nbsp;</span>
+                        </div>
+                    </div>                    
                 </div>
             </div>         
         </div>
@@ -76,6 +90,24 @@ export default {
         list_receipients() {
             return this.$store.getters.list_receipients;
         },
+        split_receipient_address() {
+            let address = this.$data.send_receipient.receipient;
+            var chunks = [];
+
+            let nb_cars = 4;
+            let i = 0;
+
+            if(address.startsWith("0x")) {
+                chunks.push(address.substring(0, 2));
+                i = 2;
+            }
+
+            for (; i < address.length; i += nb_cars) {
+                chunks.push(address.substring(i, i + nb_cars));
+            }
+
+            return chunks;
+        }, 
     },
     components: {
     PromiseButton,
@@ -106,7 +138,7 @@ export default {
 
             console.log(trx);
             this.$data.success_message = `${this.$data.send_receipient.label} has received ${this.$data.send_amount} ether`
-            this.$data.send_amount = null;
+            this.$data.send_amount = 0;
         }
     },
     async mounted() {
