@@ -7,7 +7,7 @@ export default new Vuex.Store({
   state: {
     network: null,
     balance: null,
-    factory_address : "0xE588643b4e3480B22B48698A3deC6d861A59F0bb",
+    factory_address : "0xd1476bC527eEC759a03fd9cb5A0c227B700D49d3",
     factory_found: false,
     wallet_address: null,
     wallet_mnemonic: null,
@@ -63,7 +63,7 @@ export default new Vuex.Store({
 
     async getProvider({ commit }) {
 
-      const DEBUG_MODE = false;
+      const DEBUG_MODE = true;
 
       if(DEBUG_MODE) {
         var provider = ethers.getDefaultProvider("http://localhost:8545");
@@ -142,7 +142,7 @@ export default new Vuex.Store({
 
     async loadWallet({ commit, dispatch }) {
 
-      const provider = ethers.getDefaultProvider("http://localhost:8545");
+      const provider = await dispatch("getProvider");
 
       // TODO : Decrypt with PIN + salt
       let mnemonic = localStorage.getItem('wallet_mnemonic')

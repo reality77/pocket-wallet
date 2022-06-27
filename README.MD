@@ -64,7 +64,7 @@ The contract factory address must be stored in the DApp source code directly
 + Enter amount, target address and click Send
 + Enter PIN
   - decrypt mnemonic or private key from local storage
-+ [CONTRACT] Call sendTo method
++ [CONTRACT] Call spend method
   - sends to target (if in limits allowed)
   - test child account balance. If minimum threshold reached, sends a little ETH to child account (for gas spending)
 
