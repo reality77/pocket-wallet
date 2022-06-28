@@ -6,8 +6,10 @@
             <div class="flex-grow flex align-items:left">
                 <slot></slot>
             </div>
-            <div class="flex-initial ml-4">
-                <i class="las la-angle-double-right text-slate-600" :class="{ 'text-white' : selected, 'font-bold' : selected }"></i>
+            <div class="flex-initial flex items-center justify-center ml-4">
+                <p class="text-center m-auto">
+                    <i class="las la-angle-double-right text-slate-600" :class="{ 'text-white' : selected, 'font-bold' : selected }"></i>
+                </p>
             </div>
     </div>
 </template>

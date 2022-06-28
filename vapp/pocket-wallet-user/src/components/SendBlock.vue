@@ -7,16 +7,16 @@
             <h2>Send money</h2>
         </div>
         <div class="flex-grow flex flex-row">
-            <BasicPanel class="flex-initial">
+            <BasicPanel class="flex-initial rounded-none border-0">
                 <ul class="divide-y divide-slate-700 overflow-y-auto snap-mandatory snap-y">
                     <li v-for="receipient in list_receipients" :key="receipient.receipient" class="p-2 snap-start">
                         <SelectionButton @click="selectReceipient(receipient)" :selected="(receipient == send_receipient)">
-                            <span class="text-left text-sm sm:text-lg md:text-xl">{{ receipient.label }}</span>
+                            <span class="text-left text-sm sm:text-lg">{{ receipient.label }}</span>
                         </SelectionButton>
                     </li>
                     <li class="p-2 snap-start">
                         <SelectionButton @click="selectCustomReceipient()" :selected="custom_receipient">
-                            <span class="text-left text-sm sm:text-lg md:text-xl">Other ...</span>
+                            <span class="text-left text-sm sm:text-lg">Other ...</span>
                         </SelectionButton>
                     </li>
                 </ul>
@@ -32,12 +32,12 @@
                             <label>Amount : </label>
                         </div>
                         <div class="flex-auto">
-                            <input v-model="send_amount" class="bg-transparent text-white border-slate-700 text-center text-3xl w-48" />
-                            <span class="text-white text-3xl">Ξ</span>
+                            <input v-model="send_amount" class="bg-transparent text-white border-slate-700 text-center text-2xl w-48" />
+                            <span class="text-white text-2xl">Ξ</span>
                         </div>
                     </div>
                     <div class="flex-initial">
-                        <PromiseButton :promiseFunction="sendAmountToReceipient" :disabled="!send_amount" class="mt-8 text-xl">
+                        <PromiseButton :promiseFunction="sendAmountToReceipient" :disabled="!send_amount" class="mt-8 text-lg">
                             Send {{ send_amount }} Ξ to {{ send_receipient.label }}</PromiseButton>
                     </div>
                     <div v-if="custom_receipient" class="flex-initial flex flex-col">
