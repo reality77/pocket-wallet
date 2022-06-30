@@ -6,7 +6,8 @@
 </template>
 
 <script>
-import BasicButton from "./BasicButton.vue"
+import { BasicButton } from "vapp-components"
+//import BasicButton from "./BasicButton.vue"
 
 export default {
     name: 'App',

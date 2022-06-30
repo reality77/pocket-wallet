@@ -60,7 +60,8 @@
 <script>
 import { ethers } from 'ethers';
 import PromiseButton from './PromiseButton.vue';
-import BasicPanel from './BasicPanel.vue';
+//import BasicPanel from './BasicPanel.vue';
+import { BasicPanel } from "vapp-components"
 import SelectionButton from './SelectionButton.vue';
 
 export default {

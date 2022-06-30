@@ -28,15 +28,6 @@
         hover:dark:border-purple-200 hover:dark:border-2 hover:dark:border-purple-500
         ;
     }
-    button {
-        @apply 
-        px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border-2 border-purple-200 
-        hover:text-white hover:bg-purple-600 hover:border-transparent 
-        focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2
-        disabled:text-slate-500 disabled:bg-purple-800 
-        dark:bg-purple-200 dark:border-purple-500
-        disabled:dark:text-slate-400;
-    }
 }
 
 @layer components {

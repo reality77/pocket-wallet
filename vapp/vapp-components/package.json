@@ -1,18 +1,19 @@
 {
-  "name": "pocket-wallet-user",
+  "name": "vapp-components",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build-lib": "vue-cli-service build --target lib --name vapp-components src/main.js",
     "lint": "vue-cli-service lint"
   },
+  "main": "dist/vapp-components.common.js",
+  "typings": "src/main",
   "dependencies": {
     "core-js": "^3.8.3",
-    "ethers": "^5.6.8",
-    "vapp-components": "file:../vapp-components",
-    "vue": "^3.2.13",
-    "vuex": "^4.0.2"
+    "tailwindcss": "^3.1.4",
+    "vue": "^3.2.13"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -20,11 +21,8 @@
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
-    "autoprefixer": "^10.4.7",
     "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3",
-    "postcss": "^8.4.14",
-    "tailwindcss": "^3.1.1"
+    "eslint-plugin-vue": "^8.0.3"
   },
   "eslintConfig": {
     "root": true,
@@ -36,8 +34,7 @@
       "eslint:recommended"
     ],
     "parserOptions": {
-      "parser": "@babel/eslint-parser",
-      "requireConfigFile": false
+      "parser": "@babel/eslint-parser"
     },
     "rules": {}
   },
