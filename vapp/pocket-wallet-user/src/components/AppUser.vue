@@ -116,7 +116,7 @@ export default {
   emits: {
   },
   async mounted() {
-    var provider = await this.$store.dispatch("initializeProvider");
+    var provider = await this.$store.dispatch("getProvider");
     await this.$store.dispatch("getFactory", provider);
 
     await this.$store.dispatch("loadWallet");
