@@ -18,7 +18,7 @@
         </div>
         <div class="flex-auto h-full flex flex-col p-4">
           <div v-if="!is_test_network" class="flex-initial bg-red-500/25 text-red-100">
-            <p>This demo project is not expected to be deployed in a mainnet</p>
+            <p>This demo project is not expected to be deployed on a mainnet</p>
           </div>
           <main class="m-auto">
             <!-- Content -->

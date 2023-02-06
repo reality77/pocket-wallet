@@ -9,7 +9,7 @@ export default new Vuex.Store({
     network: null,
     balance: null,
     error: null,
-    factory_address : "0xd1476bC527eEC759a03fd9cb5A0c227B700D49d3",
+    factory_address : "0x4c0c322563b7B9007a0551F62925cc9A0e3D5039",
     factory_found: false,
     user_address: null,
     contract_address: null,
