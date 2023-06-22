@@ -1,6 +1,7 @@
 <template>
     <div v-if="!wallet_address">
         <div v-if="newAccount === true">
+            <span>PIN Code : </span>
             <EnterPin @canCancel="false" @ok="onNewAccountPinEntered" @cancel="onNewAccountCancel"></EnterPin>
         </div>
         <div v-else-if="newAccount === false">

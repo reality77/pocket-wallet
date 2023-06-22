@@ -56,6 +56,7 @@ export default {
         case "0x5": return "Goerli";
         case "0x2a": return "Kovan";
         case "0x539": return "Local";
+        case "0xaa36a7": return "Sepolia";
         default: return this.$store.getters.network;
       }
     },    

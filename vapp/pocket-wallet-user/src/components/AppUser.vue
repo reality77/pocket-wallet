@@ -38,7 +38,7 @@
   <div class="modal" v-if="!factory_found">
     <span>Pocket wallet is not deployed on this network yet !</span>
   </div>
-  <div class="modal" v-else-if="!contract_address">
+  <div class="modal" v-else-if="!contract_address || !wallet_address">
     <FirstAccess></FirstAccess>
   </div>
 </template>

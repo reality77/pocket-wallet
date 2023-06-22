@@ -2,6 +2,17 @@
 
 The crypto wallet for children
 
+## Deployment
+
+```shell
+npx hardhat help
+npx hardhat test
+REPORT_GAS=true npx hardhat test
+npx hardhat node
+npx hardhat run scripts/deploy.ts
+```
+
+
 ## Hypothesis
 
 - The child DApp will have a mnenonic or private key generated and a public address
