@@ -60,8 +60,8 @@
 <script>
 import { ethers } from 'ethers';
 import PromiseButton from './PromiseButton.vue';
-import BasicPanel from '@reality77/crypto-vue-lib';
 import SelectionButton from './SelectionButton.vue';
+import BasicPanel from './BasicPanel.vue';
 
 export default {
     name: 'FirstAccess',
@@ -113,7 +113,7 @@ export default {
     PromiseButton,
     BasicPanel,
     SelectionButton
-},
+    },
     emits: {
     },
     methods: {

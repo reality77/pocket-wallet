@@ -88,7 +88,11 @@ export default {
         },
         user_address_short() 
         {
-            return `${this.$store.getters.user_address.substr(0, 6)}...${this.$store.getters.user_address.substr(-4)}`;
+            if (this.$store.getters.user_address) {
+                return `${this.$store.getters.user_address.substr(0, 6)}...${this.$store.getters.user_address.substr(-4)}`;
+            } else {
+                return ''
+            }
         },    
         is_controller() {
             return this.$store.getters.is_controller;

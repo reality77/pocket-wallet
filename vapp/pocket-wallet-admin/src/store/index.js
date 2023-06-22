@@ -9,7 +9,8 @@ export default new Vuex.Store({
     network: null,
     balance: null,
     error: null,
-    factory_address : "0x4c0c322563b7B9007a0551F62925cc9A0e3D5039",
+    //factory_address : "0x4c0c322563b7B9007a0551F62925cc9A0e3D5039",
+    factory_address : "0xc07C8167514648C50a4acD487d0559EBAfD24123", // sepolia testnet
     factory_found: false,
     user_address: null,
     contract_address: null,
@@ -66,7 +67,7 @@ export default new Vuex.Store({
 
     async initializeProvider({ commit }) {
 
-      const DEBUG_MODE = true;
+      const DEBUG_MODE = false;
 
       if(DEBUG_MODE) {
         // Test wallet
@@ -115,10 +116,10 @@ export default new Vuex.Store({
 
         var trx = await factory.createPocketWallet(userAddress, {
           type: 2,
-          maxPriorityFeePerGas: ethers.utils.parseUnits("50", "gwei"),
-          maxFeePerGas: ethers.utils.parseUnits("50", "gwei"),
-          gasLimit: 2000000,
-          value: ethers.utils.parseEther("10")
+          maxPriorityFeePerGas: ethers.utils.parseUnits("0.01", "gwei"),
+          maxFeePerGas: ethers.utils.parseUnits("2", "gwei"),
+          gasLimit: 5000000,
+          value: ethers.utils.parseEther("0.01")
         });
   
         await trx.wait();
