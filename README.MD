@@ -9,7 +9,17 @@ npx hardhat help
 npx hardhat test
 REPORT_GAS=true npx hardhat test
 npx hardhat node
+
+# Deploiement
+
+## Par défaut
 npx hardhat run scripts/deploy.ts
+
+## Sepolia
+npx hardhat deploy-zksync --network depolia
+
+## ZkSync Era
+npx hardhat deploy-zksync --network zkSyncTestnet --script deploy-zksync.ts
 ```
 
 

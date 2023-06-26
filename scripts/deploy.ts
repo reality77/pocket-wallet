@@ -7,9 +7,9 @@ async function main() {
 
   const factory = await ethers.deployContract("PocketWalletFactory");
 
-  await factory.waitForDeployment();
+  //await factory.waitForDeployment();
 
-  console.log("Pocket wallet factory address:", await factory.getAddress());
+  console.log("Pocket wallet factory address:", factory.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
