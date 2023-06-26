@@ -9,8 +9,11 @@ export default new Vuex.Store({
     network: null,
     balance: null,
     error: null,
-    //factory_address : "0x4c0c322563b7B9007a0551F62925cc9A0e3D5039",
-    factory_address : "0xc07C8167514648C50a4acD487d0559EBAfD24123", // sepolia testnet
+    factory_address_by_network: {
+      "0xaa36a7": "0xc07C8167514648C50a4acD487d0559EBAfD24123", // sepolia testnet
+      "0x118" : "0x9935BA8354E79ab7FeDF473a010531CE659B022E", // zksync era testnet
+      "default" : "0x4c0c322563b7B9007a0551F62925cc9A0e3D5039" // localhost
+    },
     factory_found: false,
     user_address: null,
     contract_address: null,
@@ -23,7 +26,16 @@ export default new Vuex.Store({
     network: (state) => state.network,
     balance: (state) => state.balance,
     error: (state) => state.error,
-    factory_address: (state) => state.factory_address,
+    factory_address: (state) => {
+
+      let address = state.factory_address_by_network[state.network];
+
+      if (address) {
+        return address;
+      } else {
+        return state.factory_address_by_network["default"];
+      }
+    },
     user_address: (state) => state.user_address,
     contract_address: (state) => state.contract_address,
     contract_balance: (state) => state.contract_balance,
@@ -92,10 +104,13 @@ export default new Vuex.Store({
 
       console.log("Initializing factory");
       try {
+        
         const factory = new ethers.Contract(this.getters.factory_address, PocketWalletFactory.abi, walletOrProvider);
+        
         let ok = await factory.isInitialized();
         commit("setFactoryFound", ok);
         return factory;
+
       } catch(e) {
         console.log("Factory not found");
         commit("setFactoryFound", false);
