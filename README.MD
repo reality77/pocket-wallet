@@ -9,8 +9,23 @@ npx hardhat help
 npx hardhat test
 REPORT_GAS=true npx hardhat test
 npx hardhat node
+
+# Deploiement
+
+## Par défaut
 npx hardhat run scripts/deploy.ts
+
+## Sepolia
+npx hardhat deploy-zksync --network depolia
+
+## ZkSync Era
+npx hardhat deploy-zksync --network zkSyncTestnet --script deploy-zksync.ts
 ```
+
+## Factories addresses by chain
+
+- Ethereum Sepolia Testnet : 0xc07C8167514648C50a4acD487d0559EBAfD24123
+- ZkSync Era Testnet : 0x9935BA8354E79ab7FeDF473a010531CE659B022E
 
 
 ## Hypothesis

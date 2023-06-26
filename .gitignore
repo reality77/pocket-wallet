@@ -11,3 +11,9 @@ typechain-types
 cache
 artifacts
 
+# ZKSync
+cache-zk
+artifacts-zk
+
+# Keys
+secret_keys.json

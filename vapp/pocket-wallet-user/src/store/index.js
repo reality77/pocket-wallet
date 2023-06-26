@@ -7,21 +7,33 @@ export default new Vuex.Store({
   state: {
     network: null,
     balance: null,
-    //factory_address : "0x4c0c322563b7B9007a0551F62925cc9A0e3D5039", 
-    factory_address : "0xc07C8167514648C50a4acD487d0559EBAfD24123", // sepolia testnet
+    factory_address_by_network: {
+      "0xaa36a7": "0xc07C8167514648C50a4acD487d0559EBAfD24123", // sepolia testnet
+      "0x118" : "0x9935BA8354E79ab7FeDF473a010531CE659B022E", // zksync era testnet
+      "default" : "0x4c0c322563b7B9007a0551F62925cc9A0e3D5039" // localhost
+    },
     factory_found: false,
     wallet_address: null,
     wallet_mnemonic: null,
     wallet_private_key: null,
     wallet_balance: null,
-    contract_address: "0x04aCF341DcD21c3f58692Ed0f22B4249ba359739",
+    contract_address: null,
     list_receipients: null,
   },
   getters: {
     network: (state) => state.network,
     error: (state) => state.error,
     balance: (state) => state.balance,
-    factory_address: (state) => state.factory_address,
+    factory_address: (state) => {
+
+      let address = state.factory_address_by_network[state.network];
+
+      if (address) {
+        return address;
+      } else {
+        return state.factory_address_by_network["default"];
+      }
+    },
     wallet_address: (state) => state.wallet_address,
     wallet_balance: (state) => state.wallet_balance,
     contract_address: (state) => state.contract_address,
@@ -167,6 +179,10 @@ export default new Vuex.Store({
       commit("setWalletMnemonic", mnemonic);
 
       wallet.connect(provider);
+
+      let network = await provider.getNetwork();
+      commit("setNetwork", `0x${network.chainId.toString(16)}`);
+
       commit("setWalletBalance", await provider.getBalance(wallet.address));
 
       if(!contract) {

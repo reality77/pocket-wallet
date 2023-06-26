@@ -51,12 +51,21 @@ export default {
       switch(this.$store.getters.network) {
         case "0x1": return "Ethereum";
         case "0x2": return "Morden";
-        case "0x3": return "Ropsten";
-        case "0x4": return "Rinkeby";
-        case "0x5": return "Goerli";
-        case "0x2a": return "Kovan";
+        case "0x3": return "Ropsten (testnet)";
+        case "0x4": return "Rinkeby (testnet)";
+        case "0x5": return "Goerli (testnet)";
+        case "0x2a": return "Kovan (testnet)";
         case "0x539": return "Local";
-        case "0xaa36a7": return "Sepolia";
+        case "0xaa36a7": return "Sepolia (testnet)";
+        case "0x118": return "ZkSync Era (testnet)";
+        case "0x144": return "ZkSync Era";
+        case "0xa": return "Optimism";
+        case "0xfa": return "Fantom";
+        case "0xa86a": return "Avalanche";
+        case "0x38": return "Binance Smart Chain";
+        case "0x89": return "Polygon";
+        case "0xa4b1": return "Arbitrum One";
+        case "0xa4ba": return "Arbitrum Nova";
         default: return this.$store.getters.network;
       }
     },    
