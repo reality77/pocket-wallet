@@ -47,7 +47,7 @@
                         <div class="flex-auto">
                             <span v-for="chunk, index in split_receipient_address" :key="chunk" class="text-white text-lg" :class="[ { 'text-green-400':  (index % 2 == 1) } ]">{{ chunk }}&nbsp;</span>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
             </div>         
         </div>
@@ -60,8 +60,8 @@
 <script>
 import { ethers } from 'ethers';
 import PromiseButton from './PromiseButton.vue';
-import BasicPanel from './BasicPanel.vue';
 import SelectionButton from './SelectionButton.vue';
+import BasicPanel from './BasicPanel.vue';
 
 export default {
     name: 'FirstAccess',
@@ -113,7 +113,7 @@ export default {
     PromiseButton,
     BasicPanel,
     SelectionButton
-},
+    },
     emits: {
     },
     methods: {
