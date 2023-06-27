@@ -115,8 +115,11 @@ export default new Vuex.Store({
       
       const provider = await dispatch("getProvider");
       let mnemonic = this.state.wallet_mnemonic;
-      var wallet = ethers.Wallet.fromMnemonic(mnemonic);
-      return wallet.connect(provider);
+
+      if(mnemonic) {
+        var wallet = ethers.Wallet.fromMnemonic(mnemonic);
+        return wallet.connect(provider);
+      }
     },
 
     async generateWallet({ commit, dispatch }, /*pin*/ ) {
@@ -160,53 +163,53 @@ export default new Vuex.Store({
       // TODO : Decrypt with PIN + salt
       let mnemonic = localStorage.getItem('wallet_mnemonic')
       let address = localStorage.getItem('wallet_address')
-      let contract = localStorage.getItem('contract_address')
-      
+
       // test if mnemonic is valid
       if(!ethers.utils.isValidMnemonic(mnemonic)) {
-        console.log("Invalid mnemonic");
-        return;
+        console.log("Invalid mnemonic or no mnemonic");
+        await dispatch("generateWallet");
+
+        mnemonic = localStorage.getItem('wallet_mnemonic')
+        address = localStorage.getItem('wallet_address')        
       }
-
-      var wallet = ethers.Wallet.fromMnemonic(mnemonic);
-
-      if(!ethers.utils.isAddress(address)) {
-        console.warn("Invalid loaded wallet address. The wallet address has been rebuilt from the mnemonic");
-        address = wallet.address;
-      }
-
-      commit("setWalletAddress", address);
-      commit("setWalletMnemonic", mnemonic);
-
-      wallet.connect(provider);
-
+      
       let network = await provider.getNetwork();
       commit("setNetwork", `0x${network.chainId.toString(16)}`);
 
-      commit("setWalletBalance", await provider.getBalance(wallet.address));
+      console.log(`Searching for PocketWallet contract for the user ...`);
 
-      if(!contract) {
-        console.log(`Searching for PocketWallet contract for the user ...`);
+      var factory = await this.dispatch("getFactory", provider);
+
+      if(factory) {
+
+        var wallet = ethers.Wallet.fromMnemonic(mnemonic);
+
+        if(!ethers.utils.isAddress(address)) {
+          console.warn("Invalid loaded wallet address. The wallet address has been rebuilt from the mnemonic");
+          address = wallet.address;
+        }
+
+        commit("setWalletAddress", address);
+        commit("setWalletMnemonic", mnemonic);
+        commit("setWalletBalance", await provider.getBalance(wallet.address));
+
+        wallet.connect(provider);
 
         await dispatch("updateBalance")
 
-        var factory = await this.dispatch("getFactory", provider);
-
-        if(factory) {
-          contract = await factory.getUserContractAddress(address);
-          
-          if(contract != "0x0000000000000000000000000000000000000000") {
-            console.log(`PocketWallet contract found : ${contract}`)
-            commit("setContractAddress", contract);
-          } else {
-            console.log(`No PocketWallet contract found for this user`)
-          }
-
-          await dispatch("updateContract")
+        let contract = await factory.getUserContractAddress(address);
+        
+        if(contract != "0x0000000000000000000000000000000000000000") {
+          console.log(`PocketWallet contract found : ${contract}`)
+          commit("setContractAddress", contract);
+        } else {
+          console.log(`No PocketWallet contract found for this user`)
         }
 
-        return true;
+        await dispatch("updateContract")
       }
+
+      return true;
     },
 
     async sendAmount({dispatch}, receipientWithAmount) {
