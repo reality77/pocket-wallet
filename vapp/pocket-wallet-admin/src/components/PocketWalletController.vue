@@ -35,7 +35,7 @@
             <div>
                 <div v-if="selected_tab_index == 0">
                     <h3>Add funds to the user contract</h3>
-                    <div class="mt-2 flex flex-col">
+                    <div class="mt-4 flex flex-col">
                         <div class="flex-auto">
                             <input type="number" v-model="amount" class="bg-transparent text-white border-slate-700 text-center text-2xl w-48">
                             <span class="text-white text-2xl">Ξ</span>
@@ -46,11 +46,11 @@
                     </div>
                 </div>
                 <div v-if="selected_tab_index == 1">
-                    <h3>Replace user</h3>
-                    <div class="mt-2 flex flex-col">
-                        <div class="flex-auto">
+                    <h3>You can change here the address of the user wallet who will benefit the contract if the wallet is lost</h3>
+                    <div class="mt-4 flex flex-col">
+                        <div class="flex-auto flex flex-row">
                             <label>New user address : </label>
-                            <input v-model="newUserAddress" class="bg-transparent text-white border-slate-700 text-center w-48" />
+                            <input v-model="newUserAddress" class="flex-grow bg-transparent text-white border-slate-700 min-w-48" />
                         </div>
                         <div class="mt-2">
                             <PromiseButton :promiseFunction="registerUser">Replace user</PromiseButton>
@@ -58,8 +58,8 @@
                     </div>
                 </div>
                 <div v-if="selected_tab_index == 2">
-                    <h3>Receipients</h3>
-                    <div class="mt-2 grid grid-cols-2 gap-2">
+                    <h3>Here you can set preconfigured receipients to the user</h3>
+                    <div class="mt-4 grid grid-cols-2 gap-2">
                         <template v-for="receipient in list_receipients" :key="receipient.receipient">
                             <div>
                                 <span class="data font-bold">{{ receipient.label }}</span>
@@ -69,10 +69,10 @@
                             </div>
                         </template>
                         <div>
-                            <label>Label : </label><input v-model="newReceipientLabel" class="ml-2" />
+                            <label>Label : </label><input v-model="newReceipientLabel" class="ml-2 bg-transparent text-white border-slate-700 min-w-48" />
                         </div>
                         <div>
-                            <label>Address : </label><input v-model="newReceipientAddress" class="ml-2" />
+                            <label>Address : </label><input v-model="newReceipientAddress" class="ml-2 bg-transparent text-white border-slate-700 min-w-48" />
                             <PromiseButton :promiseFunction="addReceipient" childClass="ml-2">Add receipient</PromiseButton>
                         </div>            
                     </div>
