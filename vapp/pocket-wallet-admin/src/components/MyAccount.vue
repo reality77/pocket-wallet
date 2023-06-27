@@ -2,13 +2,15 @@
   <figure class="rounded-xl dark:bg-slate-800 drop-shadow-lg">
     <div v-if="account">
       <div class="p-2">
-        <p>
-          <i class="lar la-user-circle la-2x"></i><span class="data">{{ account_short }}</span>
-        </p>
-        <p>
-          <i class="las la-coins la-2x"></i><span class="data">{{ balance_rounded }} Ξ</span>
-        </p>
-        <button @click="disconnect">
+        <div class="flex flex-row items-center">
+          <i class="lar la-user-circle la-2x"></i>
+          <span class="data flex-grow">{{ account_short }}</span>
+        </div>
+        <div class="flex flex-row items-center ">
+          <i class="las la-coins la-2x"></i>
+          <span class="data flex-grow">{{ balance_rounded }} Ξ</span>
+        </div>
+        <button @click="disconnect" class="m-2">
           Disconnect
         </button>
       </div>
