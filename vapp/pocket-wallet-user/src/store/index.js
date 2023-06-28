@@ -12,6 +12,25 @@ export default new Vuex.Store({
       "0x118" : "0x9935BA8354E79ab7FeDF473a010531CE659B022E", // zksync era testnet
       "default" : "0x4c0c322563b7B9007a0551F62925cc9A0e3D5039" // localhost
     },
+    selected_provider: null,
+    providers : {
+      "sepolia": {
+        caption: "Ethereum Sepolia Testnet",
+        network: "sepolia",
+        url: "https://sepolia.infura.io/v3/048cba7bbfee4554986ab6f9c1e12cca"
+      },
+      "zksync-era-testnet": {
+        caption: "zkSync Era Testnet",
+        network: 280,
+        url: "https://testnet.era.zksync.dev"
+      },
+      "metamask": {
+        caption: "Metamask"
+      },
+      "local": {
+        caption: "Localhost"
+      },
+    },
     factory_found: false,
     wallet_address: null,
     wallet_mnemonic: null,
@@ -24,6 +43,8 @@ export default new Vuex.Store({
     network: (state) => state.network,
     error: (state) => state.error,
     balance: (state) => state.balance,
+    providers: (state) => state.providers,
+    selected_provider: (state) => state.selected_provider,
     factory_address: (state) => {
 
       let address = state.factory_address_by_network[state.network];
@@ -70,26 +91,48 @@ export default new Vuex.Store({
     },
     setFactoryFound(state, factoryFound) {
       state.factory_found = factoryFound;
-    }    
+    },
+    setSelectedProvider(state, provider) {
+      state.selected_provider = provider;
+    }      
   },
   actions: {
 
-    async getProvider({ commit }) {
+    async getProvider({ commit, dispatch }) {
 
-      const DEBUG_MODE = false;
+      let providerKey = this.state.selected_provider;
 
-      if(DEBUG_MODE) {
+      if(!this.state.selected_provider) {
+        providerKey = localStorage.getItem("provider")
+
+        if(!providerKey) {
+          providerKey = "zksync-era-testnet";
+        }
+
+        dispatch("setSelectedProvider", providerKey);
+      }
+      
+      if(providerKey == "local") {
         var provider = ethers.getDefaultProvider("http://localhost:8545");
         return provider;  
-      } else {
+      } else if(providerKey == "metamask") {
         if (typeof window.ethereum === 'undefined') {
           commit("setError", "Metamask is not installed !");
           return null;
+        } else {
+          const { ethereum } = window;
+          return new ethers.providers.Web3Provider(ethereum);
         }
+      } else {
+        var providerData = this.getters.providers[providerKey];
 
-        const { ethereum } = window;
-        return new ethers.providers.Web3Provider(ethereum);
+        return new ethers.providers.StaticJsonRpcProvider(providerData.url, providerData.network)
       }
+    },
+
+    async setSelectedProvider({ commit }, providerKey) {
+      commit("setSelectedProvider", providerKey);
+      localStorage.setItem('provider', providerKey);
     },
 
     async getFactory({ commit }, walletOrProvider) {

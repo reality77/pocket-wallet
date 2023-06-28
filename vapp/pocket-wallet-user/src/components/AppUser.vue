@@ -5,6 +5,7 @@
         <li class="flex-initial text-slate-300 ml-8 self-center"><h1>Pocket wallet</h1></li>
       </ul>
       <div class="flex-shrink overflow-visible p-2 z-30">
+        <NetworkSelector></NetworkSelector>
       </div>
     </nav>
 
@@ -37,6 +38,10 @@
   </div>
   <div class="modal" v-if="!factory_found">
     <span>Pocket wallet is not deployed on this network yet !</span>
+    <div class="mt-8">
+        <label>You can also change the network :</label>
+        <NetworkSelector></NetworkSelector>
+    </div>    
   </div>
   <div class="modal" v-else-if="!contract_address || !wallet_address">
     <FirstAccess></FirstAccess>
@@ -47,14 +52,17 @@
 import { ethers } from 'ethers';
 import FirstAccess from './FirstAccess.vue';
 import SendBlock from './SendBlock.vue';
+import NetworkSelector from './NetworkSelector.vue';
 
 export default {
   name: 'AppUser',
   data: function () {
     return {
+      selected_provider: String
     }
   },
   props: {
+    
   },
   computed: {
     account() {
@@ -109,14 +117,19 @@ export default {
   },
   components: {
     FirstAccess,
-    SendBlock
+    SendBlock,
+    NetworkSelector
 },
   methods: {
+    async onProviderChanged() {
+      await this.$store.dispatch("setSelectedProvider", this.selected_provider);
+    }
   },
   emits: {
   },
   async mounted() {
     var provider = await this.$store.dispatch("getProvider");
+
     await this.$store.dispatch("getFactory", provider);
 
     await this.$store.dispatch("loadWallet");

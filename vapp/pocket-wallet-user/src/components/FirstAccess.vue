@@ -22,19 +22,22 @@
     </div>
     <div v-else>
         <div v-if="!contract_address">
-        <div>
-        </div>
             <p>
                 This is your wallet address. Send it to your parent to finalize the creation of your pocket wallet 
             </p>
-            <span>{{ wallet_address }}</span>
+            <span class="data text-3xl">{{ wallet_address }}</span>
         </div>
     </div>
+    <div class="mt-8">
+        <label>You can also change the network :</label>
+        <NetworkSelector></NetworkSelector>
+    </div>    
 </template>
 
 <script>
 import EnterPin from './EnterPin.vue';
 import BasicButton from './BasicButton.vue';
+import NetworkSelector from './NetworkSelector.vue';
 
 export default {
     name: 'FirstAccess',
@@ -58,7 +61,8 @@ export default {
     },
     components: {
     EnterPin,
-    BasicButton
+    BasicButton,
+    NetworkSelector
 },
     emits: {
     },
